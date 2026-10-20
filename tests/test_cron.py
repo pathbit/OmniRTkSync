@@ -1,12 +1,12 @@
-"""Testes unitários para o CronScheduler do OminiRTKSync."""
+"""Testes unitários para o CronScheduler do OmniRTKSync."""
 
 import time
 import unittest
 
-from omini_rtksync.cron import CronScheduler
+from omni_rtksync.cron import CronScheduler
 
 
-class TestOminiCron(unittest.TestCase):
+class TestOmniCron(unittest.TestCase):
     def test_cron_trigger_and_history(self):
         calls = []
 
@@ -14,7 +14,7 @@ class TestOminiCron(unittest.TestCase):
             calls.append(time.time())
             return {"success": True, "total": 4, "refreshed": 1}
 
-        cron = CronScheduler(sync_callback=mock_sync, interval_seconds=60, name="OminiTestCron")
+        cron = CronScheduler(sync_callback=mock_sync, interval_seconds=60, name="OmniTestCron")
         status_init = cron.get_status()
         self.assertFalse(status_init["active"])
         self.assertEqual(status_init["totalRuns"], 0)

@@ -7,9 +7,9 @@ que dependia de um servico real que derrubou a CI antes.
 import unittest
 import urllib.error
 
-from omini_rtksync import credential_check as cc
-from omini_rtksync.models import ConnectionRecord
-from omini_rtksync.gateway import ApiKeyProvider
+from omni_rtksync import credential_check as cc
+from omni_rtksync.models import ConnectionRecord
+from omni_rtksync.gateway import ApiKeyProvider
 
 
 class FakeResponse:

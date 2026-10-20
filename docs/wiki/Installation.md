@@ -10,21 +10,21 @@ For a complete guide covering Docker run, Compose, Headroom, Caveman, Tunnel, an
 The official image is published to GHCR by GitHub Actions:
 
 ```bash
-docker pull ghcr.io/pathbit/ominirtksync:latest
+docker pull ghcr.io/pathbit/omnirtksync:latest
 ```
 
 A working `docker-compose.yml` alongside the gateway:
 
 ```yaml
-name: ominirtksync-stack
+name: omnirtksync-stack
 
 services:
-  ominirtk-router:
+  omnirtk-router:
     image: diegosouzapw/omniroute:latest
-    container_name: ominirtk-router
-    hostname: ominirtk-router
+    container_name: omnirtk-router
+    hostname: omnirtk-router
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     restart: unless-stopped
     ports:
       # 20128 dentro do container; 8082 no host.
@@ -36,25 +36,25 @@ services:
     volumes:
       - omniroute_data:/app/data
 
-  ominirtk-sync:
-    image: ghcr.io/pathbit/ominirtksync:latest
-    container_name: ominirtk-sync
-    hostname: ominirtk-sync
+  omnirtk-sync:
+    image: ghcr.io/pathbit/omnirtksync:latest
+    container_name: omnirtk-sync
+    hostname: omnirtk-sync
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     restart: unless-stopped
     ports:
-      # Internal port 9090 (same in OminiRTKSync); published on 9092.
+      # Internal port 9090 (same in OmniRTKSync); published on 9092.
       # The 127.0.0.1 bind keeps the panel and the SQLite file off the internet.
       - "127.0.0.1:9092:9090"
     volumes:
       - omniroute_data:/app/data
       - ${HOME}:/root/host:ro
-      - ominirtksync_logs:/app/data/logs
+      - omnirtksync_logs:/app/data/logs
     environment:
       - HOST_HOME=/root/host
       - DB_PATH=/app/data/storage.sqlite
-      - OMNIROUTE_URL=http://ominirtk-router:20128
+      - OMNIROUTE_URL=http://omnirtk-router:20128
       - SYNC_INTERVAL=300
       - REFRESH_MARGIN=900
       - WEB_PORT=9090
@@ -63,7 +63,7 @@ services:
       - LOG_DIR=/app/data/logs
       - LOG_RETENTION_DAYS=30
     depends_on:
-      - ominirtk-router
+      - omnirtk-router
     healthcheck:
       test: ["CMD", "/opt/venv/bin/python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9090/healthz', timeout=3)"]
       interval: 15s
@@ -73,11 +73,11 @@ services:
 
 volumes:
   omniroute_data:
-  ominirtksync_logs:
+  omnirtksync_logs:
 
 networks:
-  ominirtksync-net:
-    name: ominirtksync-net
+  omnirtksync-net:
+    name: omnirtksync-net
 ```
 
 Then open **http://localhost:9092**.
@@ -100,8 +100,8 @@ Then open **http://localhost:9092**.
 Requires Python 3.11+ (3.14 is what CI pins).
 
 ```bash
-git clone https://github.com/pathbit/OminiRTkSync.git
-cd OminiRTKSync
+git clone https://github.com/pathbit/OmniRTkSync.git
+cd OmniRTKSync
 
 python3 -m venv .venv
 source .venv/bin/activate
@@ -113,16 +113,16 @@ pip install -e .
 
 ```bash
 # Connection and combo status, no changes written
-OminiRTKSync --status --db-path ~/.omniroute/data/storage.sqlite
+OmniRTKSync --status --db-path ~/.omniroute/data/storage.sqlite
 
 # One immediate synchronization pass
-OminiRTKSync --once --db-path ~/.omniroute/data/storage.sqlite
+OmniRTKSync --once --db-path ~/.omniroute/data/storage.sqlite
 
 # Continuous daemon with the dashboard
-OminiRTKSync --daemon --db-path ~/.omniroute/data/storage.sqlite
+OmniRTKSync --daemon --db-path ~/.omniroute/data/storage.sqlite
 
 # Daemon without the web server
-OminiRTKSync --daemon --no-web
+OmniRTKSync --daemon --no-web
 ```
 
 `--db-path` is optional: without it the synchronizer probes the usual locations. See
@@ -148,8 +148,8 @@ make venv && make test
 ## Upgrading
 
 ```bash
-docker compose pull ominirtk-sync
-docker compose up -d ominirtk-sync
+docker compose pull omnirtk-sync
+docker compose up -d omnirtk-sync
 ```
 
 State that survives upgrades lives in the data volume: `.dashboard_auth.json` (screen-set
@@ -185,7 +185,7 @@ Same for the gateways.
 | OmniRoute | `20128` | `8082` |
 | LiteLLM | `4000` | `8083` |
 | 9RTKSync panel | `9090` | `9091` |
-| OminiRTkSync panel | `9090` | `9092` |
+| OmniRTkSync panel | `9090` | `9092` |
 | LiteLlmRTKSync panel | `9090` | `9093` |
 
 The article stack (`claudegravity`) keeps **`20128`**, 9Router's default port.

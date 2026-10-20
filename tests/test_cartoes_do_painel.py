@@ -1,7 +1,7 @@
 """Os SEIS cartoes do painel, sempre os mesmos e sempre na mesma ordem.
 
 A regra do dono e uma so: "as telas tem cards diferentes entre Litellmrtk,
-ominirtk e etc, tem que ter todos os cards iguais". O cartao EXISTE nos tres,
+omnirtk e etc, tem que ter todos os cards iguais". O cartao EXISTE nos tres,
 sempre; o que muda e o conteudo. Quando este gateway nao tem aquele conceito, o
 cartao aparece com o estado vazio dizendo por que esta vazio AQUI -- e nao some
 da tela.
@@ -17,13 +17,13 @@ import tempfile
 import time
 import unittest
 
-from omini_rtksync.gateway import get_all_api_keys, get_all_registered_models
-from omini_rtksync.models import (
+from omni_rtksync.gateway import get_all_api_keys, get_all_registered_models
+from omni_rtksync.models import (
     ConnectionRecord,
     RegisteredModelRecord,
     VirtualKeyRecord,
 )
-from omini_rtksync import render
+from omni_rtksync import render
 
 # A ordem e contrato, nao gosto: e a mesma nos tres paineis.
 ORDEM_DOS_CARTOES = [

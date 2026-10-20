@@ -1,4 +1,4 @@
-"""Testes unitários da CLI do OminiRTKSync."""
+"""Testes unitários da CLI do OmniRTKSync."""
 
 import os
 import sqlite3
@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from omini_rtksync.cli import OmniSyncEngine, main, print_status
-from omini_rtksync.config import Settings
+from omni_rtksync.cli import OmniSyncEngine, main, print_status
+from omni_rtksync.config import Settings
 
 
 def setUpModule():
@@ -25,7 +25,7 @@ def tearDownModule():
 
 
 
-class TestOminiCLI(unittest.TestCase):
+class TestOmniCLI(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.db_path = os.path.join(self.temp_dir.name, "storage.sqlite")
@@ -78,11 +78,11 @@ class TestOminiCLI(unittest.TestCase):
         print_status(settings)
 
     def test_cli_main_status(self):
-        with patch("sys.argv", ["ominirtksync", "--db-path", self.db_path, "--status"]):
+        with patch("sys.argv", ["omnirtksync", "--db-path", self.db_path, "--status"]):
             main()
 
     def test_cli_main_once(self):
-        with patch("sys.argv", ["OminiRTKSync", "--db-path", self.db_path, "--once"]):
+        with patch("sys.argv", ["OmniRTKSync", "--db-path", self.db_path, "--once"]):
             main()
 
 

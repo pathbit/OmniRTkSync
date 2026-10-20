@@ -34,7 +34,7 @@ REFRESH_MARGIN=1800     # renew during the last 30 minutes
 ## `BrokenPipeError: [Errno 32] Broken pipe` in `serve_healthz`
 
 ```
-File "/app/src/omini_rtksync/web.py", line 236, in do_GET
+File "/app/src/omni_rtksync/web.py", line 236, in do_GET
     self.wfile.write(b"OK")
 BrokenPipeError: [Errno 32] Broken pipe
 ```
@@ -49,7 +49,7 @@ BrokenPipeError: [Errno 32] Broken pipe
 
 Now the server is a `ThreadingHTTPServer`, the gateway probe is cached for 30 s, and client
 disconnects are swallowed instead of logged as failures. If you still see it, you are running an
-image from before the fix — pull `ghcr.io/pathbit/ominirtksync:latest` again.
+image from before the fix — pull `ghcr.io/pathbit/omnirtksync:latest` again.
 
 ---
 
@@ -90,15 +90,15 @@ If the numbers still look wrong, the synchronizer may not be writing at all — 
 Sign in with user `admin` and the **recovery hash** as the password. Find it with:
 
 ```bash
-docker logs ominirtk-sync 2>&1 | grep "Recovery hash"
+docker logs omnirtk-sync 2>&1 | grep "Recovery hash"
 # or, if the log file is mounted:
-grep "Recovery hash" /app/data/logs/ominirtksync.log
+grep "Recovery hash" /app/data/logs/omnirtksync.log
 ```
 
 If the log has already rotated past it, the value is on disk:
 
 ```bash
-docker exec ominirtk-sync cat /app/data/.dashboard_recovery
+docker exec omnirtk-sync cat /app/data/.dashboard_recovery
 ```
 
 To pin your own instead of relying on the generated one, set `DASHBOARD_RECOVERY_HASH` and
@@ -131,7 +131,7 @@ while `LOG_TO_STDOUT=1`.
 ## Both synchronizers fight over the same port
 
 They listen on **9090 inside their own container** by design. Only the published host port
-differs: `9091` for 9RTKSync, `9092` for OminiRTKSync. If you changed `WEB_PORT`, change it in
+differs: `9091` for 9RTKSync, `9092` for OmniRTKSync. If you changed `WEB_PORT`, change it in
 one container only — there is no reason for the internal ports to differ.
 
 ---

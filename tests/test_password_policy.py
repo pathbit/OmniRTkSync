@@ -4,15 +4,15 @@ import os
 import tempfile
 import unittest
 
-from omini_rtksync.auth import (
+from omni_rtksync.auth import (
     hash_password,
     password_matches,
     read_db_credentials,
     validate_password_strength,
     write_db_credentials,
 )
-from omini_rtksync.config import Settings
-from omini_rtksync.prefs import resolve_prefs_path
+from omni_rtksync.config import Settings
+from omni_rtksync.prefs import resolve_prefs_path
 
 
 class TestPasswordStrength(unittest.TestCase):

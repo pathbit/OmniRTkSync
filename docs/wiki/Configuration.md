@@ -80,7 +80,7 @@ Full rules in [Authentication](Authentication).
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `LOG_DIR` | `<DB_PATH dir>/logs` | Directory for log files. Falls back to `~/.ominirtksync/logs`. |
+| `LOG_DIR` | `<DB_PATH dir>/logs` | Directory for log files. Falls back to `~/.omnirtksync/logs`. |
 | `LOG_RETENTION_DAYS` | `30` | Days before rotated files are purged. Minimum `1`. |
 | `LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING` or `ERROR`. |
 | `LOG_TO_STDOUT` | `1` | `0` stops mirroring events on the container stdout. |
@@ -94,10 +94,10 @@ Details in [Logging](Logging).
 Command-line flags take precedence over the environment for a single run:
 
 ```bash
-OminiRTKSync --status  --db-path /path/to/data.sqlite
-OminiRTKSync --once    --db-path /path/to/data.sqlite
-OminiRTKSync --daemon  --db-path /path/to/data.sqlite --interval 60 --margin 1200 --port 9090
-OminiRTKSync --daemon  --no-web
+OmniRTKSync --status  --db-path /path/to/data.sqlite
+OmniRTKSync --once    --db-path /path/to/data.sqlite
+OmniRTKSync --daemon  --db-path /path/to/data.sqlite --interval 60 --margin 1200 --port 9090
+OmniRTKSync --daemon  --no-web
 ```
 
 ---
@@ -109,7 +109,7 @@ No dashboard, no interactive setup, scheduler on a one-minute cadence, logs kept
 ```yaml
 environment:
   - DB_PATH=/app/data/storage.sqlite
-  - OMNIROUTE_URL=http://ominirtk-router:20128
+  - OMNIROUTE_URL=http://omnirtk-router:20128
   - SYNC_INTERVAL=60
   - REFRESH_MARGIN=1200
   - ENABLE_WEB_DASHBOARD=0

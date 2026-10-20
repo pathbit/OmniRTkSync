@@ -10,7 +10,7 @@ porque é ele que faz `curl` e monitoramento funcionarem sem sessão.
 import time
 import unittest
 
-from omini_rtksync import sessao
+from omni_rtksync import sessao
 
 
 class CookieDeSessao(unittest.TestCase):
@@ -61,7 +61,7 @@ class CookieDeSessao(unittest.TestCase):
         Cookies não se separam por porta: um nome genérico faria o login num
         painel derrubar a sessão dos outros dois.
         """
-        self.assertTrue(sessao.NOME_DO_COOKIE.startswith("ominirtksync"))
+        self.assertTrue(sessao.NOME_DO_COOKIE.startswith("omnirtksync"))
 
     def test_sair_apaga_cookie_com_data_no_passado(self):
         cabecalho = sessao.cabecalho_para_apagar()

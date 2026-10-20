@@ -1,6 +1,6 @@
 """Identidade deste produto: a ÚNICA fronteira entre os três painéis irmãos.
 
-9RTKSync, OminiRTKSync e LiteLlmRTKSync são clones em código. O que muda entre
+9RTKSync, OmniRTKSync e LiteLlmRTKSync são clones em código. O que muda entre
 eles são cores, nome, logo e a quem cada um se conecta — e nada mais. Este
 arquivo é o lugar onde essa diferença mora. Depois dele, nenhum outro módulo
 comum pode escrever uma cor em hexadecimal, o nome do produto ou o nome do
@@ -19,7 +19,7 @@ está em tests/test_identidade_visual.py.
 # --------------------------------------------------------------------------
 
 # Nome comercial, como aparece na aba do navegador e no cabeçalho do painel.
-NOME_DO_PRODUTO = "OminiRTKSync"
+NOME_DO_PRODUTO = "OmniRTKSync"
 
 # Gateway que este sincronizador atende.
 NOME_DO_GATEWAY = "OmniRoute"
@@ -29,7 +29,7 @@ NOME_DO_GATEWAY = "OmniRoute"
 PROVEDOR_DO_GATEWAY = "omniroute"
 
 # Prefixo dos contêineres da stack deste produto.
-PREFIXO_DE_CONTAINER = "ominirtk-"
+PREFIXO_DE_CONTAINER = "omnirtk-"
 
 # --------------------------------------------------------------------------
 # Portas publicadas no host. O valor efetivo continua vindo do ambiente
@@ -85,8 +85,8 @@ PALETA = {
 # Os três painéis podem ser abertos no mesmo navegador, no mesmo host, em portas
 # diferentes — e cookie não se separa por porta. Sem o nome do produto no nome
 # do cookie, entrar num painel derrubaria a sessão dos outros dois.
-NOME_DO_COOKIE = "ominirtksync_sessao"
-NOME_DO_COOKIE_DE_ESTADO = "ominirtksync_estado_sso"
+NOME_DO_COOKIE = "omnirtksync_sessao"
+NOME_DO_COOKIE_DE_ESTADO = "omnirtksync_estado_sso"
 
 # As duas chaves de tradução que dependem do que ESTE gateway faz. O catálogo de
 # `i18n.py` é o mesmo texto nos três irmãos; estas duas não podiam ser, porque o

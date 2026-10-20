@@ -21,9 +21,9 @@ import time
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from omini_rtksync.gateway import update_connection, update_connection_health
-from omini_rtksync.models import ConnectionRecord
-from omini_rtksync.render import render_refresh_reason
+from omni_rtksync.gateway import update_connection, update_connection_health
+from omni_rtksync.models import ConnectionRecord
+from omni_rtksync.render import render_refresh_reason
 
 
 def agora_mais(segundos: int) -> str:
@@ -303,8 +303,8 @@ class TestTravaVencidaSaiNoCicloReal(unittest.TestCase):
         return v
 
     def test_an_expired_hold_is_cleared_for_an_oauth_connection(self):
-        from omini_rtksync.cli import OmniSyncEngine
-        from omini_rtksync.config import Settings
+        from omni_rtksync.cli import OmniSyncEngine
+        from omni_rtksync.config import Settings
 
         self.assertIsNotNone(self.trava_gravada())
         motor = OmniSyncEngine(Settings(db_path=self.db, enable_web=False, validate_credentials=False))
@@ -324,12 +324,12 @@ class TestFraseDaSondagem(unittest.TestCase):
 
     def mensagens(self, estado, detalhe):
         import unittest.mock
-        from omini_rtksync.credential_check import CheckResult
-        from omini_rtksync.gateway import ApiKeyProvider
+        from omni_rtksync.credential_check import CheckResult
+        from omni_rtksync.gateway import ApiKeyProvider
 
         provider = ApiKeyProvider(validate_credentials=True)
         with unittest.mock.patch(
-            "omini_rtksync.gateway.check_connection",
+            "omni_rtksync.gateway.check_connection",
             return_value=CheckResult(state=estado, detail=detalhe, checked_at="2026-01-01T00:00:00Z"),
         ):
             _, _, msgs = provider.check_and_refresh(
@@ -338,14 +338,14 @@ class TestFraseDaSondagem(unittest.TestCase):
         return msgs
 
     def test_a_plain_200_reads_as_a_clean_acceptance(self):
-        from omini_rtksync.credential_check import STATE_VALID
+        from omni_rtksync.credential_check import STATE_VALID
 
         m = " ".join(self.mensagens(STATE_VALID, "HTTP 200"))
         self.assertIn("Autenticação aceita", m)
         self.assertNotIn("recusada", m)
 
     def test_a_400_says_what_the_number_means(self):
-        from omini_rtksync.credential_check import STATE_VALID
+        from omni_rtksync.credential_check import STATE_VALID
 
         m = " ".join(self.mensagens(STATE_VALID, "HTTP 400"))
         self.assertIn("Autenticação aceita", m)

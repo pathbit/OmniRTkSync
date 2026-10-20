@@ -15,8 +15,8 @@ Estes testes fixam duas decisões:
 
 import unittest
 
-from omini_rtksync import render
-from omini_rtksync.models import ConnectionRecord
+from omni_rtksync import render
+from omni_rtksync.models import ConnectionRecord
 
 
 def conexao(nome: str, **dados) -> ConnectionRecord:

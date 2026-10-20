@@ -1,4 +1,4 @@
-"""Testes de autenticação HTTP Basic Auth e rotas protegidas no OminiRTKSync."""
+"""Testes de autenticação HTTP Basic Auth e rotas protegidas no OmniRTKSync."""
 
 import base64
 import json
@@ -9,11 +9,11 @@ import urllib.error
 import urllib.request
 import unittest
 
-from omini_rtksync.config import Settings
-from omini_rtksync.web import start_web_server
+from omni_rtksync.config import Settings
+from omni_rtksync.web import start_web_server
 
 
-class TestOminiWebAuth(unittest.TestCase):
+class TestOmniWebAuth(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp_dir = tempfile.TemporaryDirectory()

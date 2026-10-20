@@ -8,7 +8,7 @@ alternativa óbvia e pior.
 
 import unittest
 
-from omini_rtksync import paginacao
+from omni_rtksync import paginacao
 
 
 class RecorteDaPagina(unittest.TestCase):

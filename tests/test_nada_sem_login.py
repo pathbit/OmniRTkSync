@@ -42,7 +42,7 @@ import re
 import unittest
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
-SERVIDOR = RAIZ / "src" / "omini_rtksync" / "web.py"
+SERVIDOR = RAIZ / "src" / "omni_rtksync" / "web.py"
 
 PUBLICAS = {
     "/healthz", "/login", "/robots.txt", "/credenciais-atualizadas",

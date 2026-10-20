@@ -1,4 +1,4 @@
-"""Testes unitários para motor de descoberta e múltiplos provedores do OminiRTKSync."""
+"""Testes unitários para motor de descoberta e múltiplos provedores do OmniRTKSync."""
 
 import json
 import os
@@ -6,11 +6,11 @@ import shutil
 import tempfile
 import unittest
 
-from omini_rtksync.gateway import HostDiscoveryEngine
-from omini_rtksync.gateway import ApiKeyProvider, GenericOAuthProvider, GoogleProvider, LocalProvider
+from omni_rtksync.gateway import HostDiscoveryEngine
+from omni_rtksync.gateway import ApiKeyProvider, GenericOAuthProvider, GoogleProvider, LocalProvider
 
 
-class TestOminiDiscovery(unittest.TestCase):
+class TestOmniDiscovery(unittest.TestCase):
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
         self.engine = HostDiscoveryEngine(host_home=self.tmp_dir)
@@ -23,16 +23,16 @@ class TestOminiDiscovery(unittest.TestCase):
         os.makedirs(gemini_dir, exist_ok=True)
         with open(os.path.join(gemini_dir, "oauth_creds.json"), "w") as f:
             json.dump({
-                "access_token": "ya29.omini_google",
-                "refresh_token": "1//omini_ref",
-                "client_id": "omini_cid",
-                "client_secret": "omini_sec",
+                "access_token": "ya29.omni_google",
+                "refresh_token": "1//omni_ref",
+                "client_id": "omni_cid",
+                "client_secret": "omni_sec",
                 "expiry_date": 1800000000000,
             }, f)
 
         res = self.engine.discover_google()
         self.assertIsNotNone(res)
-        self.assertEqual(res["accessToken"], "ya29.omini_google")
+        self.assertEqual(res["accessToken"], "ya29.omni_google")
 
     def test_discover_claude_settings(self):
         claude_dir = os.path.join(self.tmp_dir, ".claude")
@@ -40,13 +40,13 @@ class TestOminiDiscovery(unittest.TestCase):
         with open(os.path.join(claude_dir, "settings.json"), "w") as f:
             json.dump({
                 "env": {
-                    "ANTHROPIC_API_KEY": "sk-ant-test-omini",
+                    "ANTHROPIC_API_KEY": "sk-ant-test-omni",
                 }
             }, f)
 
         res = self.engine.discover_claude()
         self.assertIsNotNone(res)
-        self.assertEqual(res["apiKey"], "sk-ant-test-omini")
+        self.assertEqual(res["apiKey"], "sk-ant-test-omni")
 
     def test_multi_providers(self):
         # 1. Google Provider

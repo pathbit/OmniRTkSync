@@ -40,10 +40,10 @@ import zlib
 from typing import Any, Dict, Optional
 from urllib.parse import parse_qs, urlencode, urlparse
 
-from omini_rtksync import protecao, sso
-from omini_rtksync.config import Settings
-from omini_rtksync.prefs import resolve_prefs_path
-from omini_rtksync.web import start_web_server
+from omni_rtksync import protecao, sso
+from omni_rtksync.config import Settings
+from omni_rtksync.prefs import resolve_prefs_path
+from omni_rtksync.web import start_web_server
 
 PORTA = 19291
 PAINEL = f"http://127.0.0.1:{PORTA}"
@@ -293,7 +293,7 @@ class BaseDeSSO(unittest.TestCase):
         )
         self.assertEqual(resposta.status, 302, resposta.corpo[:300])
         for cookie in resposta.cookies():
-            if cookie.startswith("ominirtksync_sessao="):
+            if cookie.startswith("omnirtksync_sessao="):
                 return cookie.split(";", 1)[0]
         self.fail("o formulário não emitiu cookie de sessão")
 
@@ -309,7 +309,7 @@ class BaseDeSSO(unittest.TestCase):
         state = parametros["state"][0]
         self.provedor.nonce_da_ida = parametros["nonce"][0]
         for cookie in resposta.cookies():
-            if cookie.startswith("ominirtksync_estado_sso="):
+            if cookie.startswith("omnirtksync_estado_sso="):
                 return state, cookie.split(";", 1)[0]
         self.fail("a ida não gravou o cookie de estado")
 
@@ -331,14 +331,14 @@ class BaseDeSSO(unittest.TestCase):
     def assertEntrou(self, resposta: Resposta):
         self.assertEqual(resposta.status, 200, resposta.corpo[:300])
         self.assertTrue(
-            any(c.startswith("ominirtksync_sessao=") for c in resposta.cookies()),
+            any(c.startswith("omnirtksync_sessao=") for c in resposta.cookies()),
             "o callback tinha de emitir o cookie de sessão",
         )
 
     def assertNaoEntrou(self, resposta: Resposta):
         self.assertEqual(resposta.status, 200, resposta.corpo[:300])
         self.assertFalse(
-            any(c.startswith("ominirtksync_sessao=") for c in resposta.cookies()),
+            any(c.startswith("omnirtksync_sessao=") for c in resposta.cookies()),
             "uma entrada recusada não pode emitir sessão",
         )
 
@@ -375,7 +375,7 @@ class TestIdaAoProvedor(BaseDeSSO):
         O sintoma seria o pior possível: o operador cai no formulário sem erro
         nenhum na tela, como se a senha estivesse errada.
         """
-        cookie = [c for c in self.inicia().cookies() if c.startswith("ominirtksync_estado_sso=")][0]
+        cookie = [c for c in self.inicia().cookies() if c.startswith("omnirtksync_estado_sso=")][0]
         self.assertIn("SameSite=Lax", cookie)
         self.assertNotIn("SameSite=Strict", cookie)
         self.assertIn("HttpOnly", cookie)
@@ -415,23 +415,23 @@ class TestVoltaDoProvedor(BaseDeSSO):
     def test_o_caminho_feliz_emite_o_mesmo_cookie_do_formulario(self):
         resposta = self.fluxo_completo()
         self.assertEntrou(resposta)
-        do_sso = [c for c in resposta.cookies() if c.startswith("ominirtksync_sessao=")][0]
+        do_sso = [c for c in resposta.cookies() if c.startswith("omnirtksync_sessao=")][0]
         do_formulario = self.sessao_local()
         # Mesmo nome, mesma política: uma sessão só, não duas invenções.
         self.assertIn("HttpOnly", do_sso)
         self.assertIn("SameSite=Strict", do_sso)
-        self.assertTrue(do_formulario.startswith("ominirtksync_sessao="))
+        self.assertTrue(do_formulario.startswith("omnirtksync_sessao="))
 
     def test_o_cookie_emitido_abre_o_painel(self):
         """A prova de que a sessão é de verdade: ela entra."""
         resposta = self.fluxo_completo()
         cookie = [
             c.split(";", 1)[0] for c in resposta.cookies()
-            if c.startswith("ominirtksync_sessao=")
+            if c.startswith("omnirtksync_sessao=")
         ][0]
         painel = self.pede("GET", "/", cabecalhos=self.como_navegador({"Cookie": cookie}))
         self.assertEqual(painel.status, 200)
-        self.assertIn("OminiRTKSync", painel.corpo)
+        self.assertIn("OmniRTKSync", painel.corpo)
 
     def test_o_pouso_e_200_com_refresh_e_nunca_302(self):
         """Numa cadeia iniciada por outro site o cookie `Strict` não viaja no 302.
@@ -449,7 +449,7 @@ class TestVoltaDoProvedor(BaseDeSSO):
         resposta = self.fluxo_completo()
         apagados = [
             c for c in resposta.cookies()
-            if c.startswith("ominirtksync_estado_sso=") and "Max-Age=0" in c
+            if c.startswith("omnirtksync_estado_sso=") and "Max-Age=0" in c
         ]
         self.assertTrue(apagados, "o cookie de estado tem de morrer no pouso")
 
@@ -478,12 +478,12 @@ class TestVoltaDoProvedor(BaseDeSSO):
         """O prefixo distingue no log quem veio pela porta federada."""
         # A marca vive no cookie assinado; conferimos pelo módulo, sem inventar
         # uma segunda forma de ler sessão.
-        from omini_rtksync import sessao
+        from omni_rtksync import sessao
         resposta = self.fluxo_completo()
         self.assertEntrou(resposta)
         valor = [
             c.split(";", 1)[0].split("=", 1)[1] for c in resposta.cookies()
-            if c.startswith("ominirtksync_sessao=")
+            if c.startswith("omnirtksync_sessao=")
         ][0]
         self.assertEqual(sessao.usuario_da_sessao(valor), f"sso:{EMAIL}")
 
@@ -510,7 +510,7 @@ class TestRecusas(BaseDeSSO):
         carga = base64.urlsafe_b64encode(
             f"state-inventado|nonce-inventado|verificador|{int(time.time()) + 600}".encode("utf-8")
         ).decode("ascii")
-        forjado = f"ominirtksync_estado_sso={carga}.assinatura-inventada"
+        forjado = f"omnirtksync_estado_sso={carga}.assinatura-inventada"
         self.assertNaoEntrou(self.volta("state-inventado", forjado))
 
     def test_state_trocado_nao_entra(self):

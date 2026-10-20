@@ -1,11 +1,11 @@
-"""Validação da imagem Docker do OminiRTkSync usando Testcontainers.
+"""Validação da imagem Docker do OmniRTkSync usando Testcontainers.
 
 Garante que a imagem Docker gerada:
 1. Inicializa sem falhas com as configurações padrão.
 2. Expõe o dashboard web na porta 9090.
 3. Responde requisições HTTP em /login com código 200 e página HTML válida.
 4. Responde no endpoint /healthz com o cabeçalho e corpo documentados.
-5. Permite executar a CLI (ominirtksync --help) com sucesso dentro do container.
+5. Permite executar a CLI (omnirtksync --help) com sucesso dentro do container.
 """
 
 import os
@@ -15,7 +15,7 @@ import urllib.request
 import urllib.error
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DOCKER_IMAGE_PADRAO = "ominirtksync:test"
+DOCKER_IMAGE_PADRAO = "omnirtksync:test"
 
 
 def docker_disponivel() -> bool:
@@ -45,7 +45,7 @@ def obter_ou_construir_imagem(nome_imagem: str) -> str:
     raise RuntimeError(f"Imagem {nome_imagem} não encontrada e Dockerfile não localizado em {RAIZ}")
 
 
-class TestOminiRTkSyncContainer(unittest.TestCase):
+class TestOmniRTkSyncContainer(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         try:
@@ -93,7 +93,7 @@ class TestOminiRTkSyncContainer(unittest.TestCase):
                 cabecalhos = dict(resp.getheaders())
                 self.assertIn("text/html", cabecalhos.get("Content-Type", ""))
                 corpo = resp.read().decode("utf-8")
-                self.assertIn("OminiRTKSync", corpo)
+                self.assertIn("OmniRTKSync", corpo)
                 self.assertIn("<!DOCTYPE html>", corpo)
 
             # 3. Valida resposta do endpoint /healthz
@@ -109,17 +109,17 @@ class TestOminiRTkSyncContainer(unittest.TestCase):
 
             # Sem banco montado e sem gateway externo, o healthz esperado é 503 DATABASE_NOT_READY
             self.assertIn(status_healthz, (200, 503))
-            self.assertEqual(cabecalho_server, "OminiRTKSync")
+            self.assertEqual(cabecalho_server, "OmniRTKSync")
             self.assertTrue(
                 "OK" in corpo_healthz or "DATABASE_NOT_READY" in corpo_healthz or "GATEWAY_SERVICE_UNREACHABLE" in corpo_healthz,
                 f"Corpo inesperado do healthz: {corpo_healthz}",
             )
 
             # 4. Valida execução da CLI dentro do container
-            codigo_saida, saida = container.exec(["ominirtksync", "--help"])
-            self.assertEqual(codigo_saida, 0, f"Comando ominirtksync --help falhou com código {codigo_saida}: {saida}")
+            codigo_saida, saida = container.exec(["omnirtksync", "--help"])
+            self.assertEqual(codigo_saida, 0, f"Comando omnirtksync --help falhou com código {codigo_saida}: {saida}")
             texto_saida = saida.decode("utf-8")
-            self.assertIn("ominirtksync", texto_saida.lower())
+            self.assertIn("omnirtksync", texto_saida.lower())
             self.assertIn("--daemon", texto_saida)
 
 

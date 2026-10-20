@@ -1,11 +1,11 @@
-# OminiRTKSync
+# OmniRTKSync
 
 **OmniRoute Universal Token & Connection Synchronizer** — a high-availability guardian for
 [OmniRoute](https://github.com/diegosouzapw/OmniRoute) gateways. It keeps OAuth accounts alive, heals
 credential formats the gateway cannot read, clears stale rate-limit locks, and reports exactly
 why each connection was or was not renewed.
 
-This wiki is generated from [`docs/wiki/`](https://github.com/pathbit/OminiRTkSync/tree/master/docs/wiki)
+This wiki is generated from [`docs/wiki/`](https://github.com/pathbit/OmniRTkSync/tree/master/docs/wiki)
 in the main repository. Edit the files there and open a pull request — a push to `master`
 republishes these pages automatically. Editing a page directly here will be overwritten.
 
@@ -36,7 +36,7 @@ republishes these pages automatically. Editing a page directly here will be over
 **Credential format healing.** OmniRoute keeps `expires_at` in a TEXT column and reads it with
 `new Date(...)`. A value in a shape that parser rejects silently stops the gateway's proactive
 refresh for that connection, and the account 401s until someone re-authenticates by hand.
-OminiRTKSync writes ISO-8601 there, the gateway's own native format.
+OmniRTKSync writes ISO-8601 there, the gateway's own native format.
 
 **Proactive OAuth renewal.** Google Antigravity and Gemini CLI tokens are refreshed before they
 expire, using a configurable margin (`REFRESH_MARGIN`, default 15 minutes). Credentials found on
@@ -64,7 +64,7 @@ schema. The two projects share the same dashboard, logging, authentication and c
 contract; only the database layer and the provider set differ.
 
 Both synchronizers listen on **port 9090 inside their container**. The published host ports
-differ so they can run side by side: `9091` for 9RTKSync, `9092` for OminiRTKSync.
+differ so they can run side by side: `9091` for 9RTKSync, `9092` for OmniRTKSync.
 
 ---
 
@@ -86,13 +86,13 @@ credential on first boot — read it and sign in as `admin`, then set a real
 password on the screen:
 
 ```bash
-docker exec ominirtk-sync cat /app/data/.dashboard_recovery
+docker exec omnirtk-sync cat /app/data/.dashboard_recovery
 ```
 
 Full detail in [Authentication](Authentication).
 
 ## License
 
-MIT — see [LICENSE](https://github.com/pathbit/OminiRTkSync/blob/master/LICENSE).
+MIT — see [LICENSE](https://github.com/pathbit/OmniRTkSync/blob/master/LICENSE).
 
 Built by [Pathbit](https://pathbit.co/).

@@ -2,7 +2,7 @@
 
 *(Versão em português disponível na segunda metade desta página.)*
 
-Complete guide to deploying **OminiRTkSync** and **OmniRoute** via Docker and Docker Compose, including token optimization with **Headroom** and **Caveman**, remote access via **Cloudflare Tunnel** and **Tailscale**, and automated container package retention.
+Complete guide to deploying **OmniRTkSync** and **OmniRoute** via Docker and Docker Compose, including token optimization with **Headroom** and **Caveman**, remote access via **Cloudflare Tunnel** and **Tailscale**, and automated container package retention.
 
 ---
 
@@ -12,7 +12,7 @@ Official multi-architecture Docker images (`linux/amd64` and `linux/arm64`) are 
 
 ```bash
 # Pull latest stable release
-docker pull ghcr.io/pathbit/ominirtksync:latest
+docker pull ghcr.io/pathbit/omnirtksync:latest
 ```
 
 ### Automated Package Retention (Last 3 Versions)
@@ -23,7 +23,7 @@ To ensure high availability, rollback safety, and clean storage, the GitHub Acti
 - Runs automatically after every successful release build and on a weekly schedule.
 
 > [!NOTE]
-> **GHCR Visibility & Permissions**: GitHub Container Registry packages in organizations default to Private upon initial push. If `docker pull` returns `unauthorized`, an organization administrator must navigate to `github.com/orgs/pathbit/packages/container/ominirtksync/settings` and set the package visibility to **Public**.
+> **GHCR Visibility & Permissions**: GitHub Container Registry packages in organizations default to Private upon initial push. If `docker pull` returns `unauthorized`, an organization administrator must navigate to `github.com/orgs/pathbit/packages/container/omnirtksync/settings` and set the package visibility to **Public**.
 
 ---
 
@@ -33,24 +33,24 @@ If you already have an OmniRoute gateway running on your host machine or network
 
 ```bash
 docker run -d \
-  --name ominirtk-sync \
+  --name omnirtk-sync \
   --restart unless-stopped \
   -p 127.0.0.1:9092:9090 \
   -v omniroute_data:/app/data \
   -v "${HOME}:/root/host:ro" \
-  -v ominirtksync_logs:/app/logs \
+  -v omnirtksync_logs:/app/logs \
   -e DB_PATH=/app/data/storage.sqlite \
   -e OMNIROUTE_URL=http://host.docker.internal:20128 \
   -e DASHBOARD_USER=admin \
   -e DASHBOARD_PASSWORD=your-secure-password \
-  ghcr.io/pathbit/ominirtksync:latest
+  ghcr.io/pathbit/omnirtksync:latest
 ```
 
 ---
 
 ## 3. Production Deployment with Docker Compose
 
-The standard production setup runs OmniRoute (gateway) and OminiRTkSync (synchronizer) on an isolated internal management network (`ominirtksync-net`), with optional shared inference networking (`rtk-inference-net`).
+The standard production setup runs OmniRoute (gateway) and OmniRTkSync (synchronizer) on an isolated internal management network (`omnirtksync-net`), with optional shared inference networking (`rtk-inference-net`).
 
 ### Step 1: Initialize Configuration
 
@@ -69,9 +69,9 @@ docker compose -f docker-compose.example.yml up -d
 
 | Service | Container Name | Internal Port | Host Published Port | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| **OmniRoute** | `ominirtk-router` | `20128` | `127.0.0.1:8082` | Gateway API & Admin |
-| **OminiRTkSync** | `ominirtk-sync` | `9090` | `127.0.0.1:9092` | Guardian Dashboard & Healthz |
-| **Headroom** *(optional)* | `ominirtk-headroom` | `8787` | `127.0.0.1:8787` | Token Compression Proxy |
+| **OmniRoute** | `omnirtk-router` | `20128` | `127.0.0.1:8082` | Gateway API & Admin |
+| **OmniRTkSync** | `omnirtk-sync` | `9090` | `127.0.0.1:9092` | Guardian Dashboard & Healthz |
+| **Headroom** *(optional)* | `omnirtk-headroom` | `8787` | `127.0.0.1:8787` | Token Compression Proxy |
 
 Dashboard access: **http://localhost:9092**
 
@@ -105,7 +105,7 @@ AI coding agents (such as **Claude Code**, **Cursor**, **Windsurf**, and **Roo C
 └───────────────▲────────────────┘
                 │
 ┌───────────────┴────────────────┐
-│  OminiRTkSync (Guardian: 9092) │  <-- OAuth renewal & rate-limit healing
+│  OmniRTkSync (Guardian: 9092) │  <-- OAuth renewal & rate-limit healing
 └────────────────────────────────┘
 ```
 
@@ -120,7 +120,7 @@ Headroom acts as a middleware proxy sitting between your coding agent and OmniRo
 docker compose -f docker-compose.example.yml --profile headroom up -d
 ```
 
-Configure your coding tool to point to Headroom (`http://127.0.0.1:8787/v1`) with OmniRoute credentials. Headroom automatically proxies optimized requests to `http://ominirtk-router:20128`.
+Configure your coding tool to point to Headroom (`http://127.0.0.1:8787/v1`) with OmniRoute credentials. Headroom automatically proxies optimized requests to `http://omnirtk-router:20128`.
 
 ### Caveman: Output Token Reduction Skill
 
@@ -152,7 +152,7 @@ docker compose -f docker-compose.example.yml --profile tunel up -d
 View the generated `https://...trycloudflare.com` URL in container logs:
 
 ```bash
-docker logs ominirtk-tunel
+docker logs omnirtk-tunel
 ```
 
 ### Option B: Cloudflare Named Tunnel (Persistent Domain)
@@ -182,7 +182,7 @@ The safest method: your gateway joins your private tailnet and is never exposed 
    ```bash
    docker compose -f docker-compose.example.yml --profile tailnet up -d
    ```
-4. Access via MagicDNS at `http://ominirtk:20128` or Tailscale IP `100.x.y.z:20128`.
+4. Access via MagicDNS at `http://omnirtk:20128` or Tailscale IP `100.x.y.z:20128`.
 
 Alternatively, install Tailscale directly on the host machine:
 
@@ -213,14 +213,14 @@ The synchronizer exposes `/healthz` on port 9090 (host 9092):
 
 # Guia de Implantação via Docker e Docker Compose
 
-Guia completo para implantar o **OminiRTkSync** e o **OmniRoute** via Docker e Docker Compose, com otimização de tokens via **Headroom** e **Caveman**, acesso remoto seguro via **Cloudflare Tunnel** e **Tailscale**, e retenção automatizada de imagens no GitHub Packages.
+Guia completo para implantar o **OmniRTkSync** e o **OmniRoute** via Docker e Docker Compose, com otimização de tokens via **Headroom** e **Caveman**, acesso remoto seguro via **Cloudflare Tunnel** e **Tailscale**, e retenção automatizada de imagens no GitHub Packages.
 
 ## 1. Pacotes Oficiais e Política de Retenção de 3 Versões
 
 As imagens oficiais multi-arquitetura (`linux/amd64` e `linux/arm64`) são geradas e publicadas no GitHub Container Registry (GHCR):
 
 ```bash
-docker pull ghcr.io/pathbit/ominirtksync:latest
+docker pull ghcr.io/pathbit/omnirtksync:latest
 ```
 
 ### Retenção Automática das 3 Últimas Versões
@@ -231,7 +231,7 @@ O pipeline do GitHub Actions garante que:
 - A limpeza ocorre ao término de cada build de release e em agendamento semanal.
 
 > [!NOTE]
-> **Visibilidade no GHCR**: Por padrão de segurança do GitHub, pacotes criados sob organizações nascem com visibilidade Privada. Se o comando `docker pull` responder com `unauthorized`, o administrador da organização no GitHub deve acessar as configurações do pacote (`github.com/orgs/pathbit/packages/container/ominirtksync/settings`) e alterar a visibilidade para **Public**.
+> **Visibilidade no GHCR**: Por padrão de segurança do GitHub, pacotes criados sob organizações nascem com visibilidade Privada. Se o comando `docker pull` responder com `unauthorized`, o administrador da organização no GitHub deve acessar as configurações do pacote (`github.com/orgs/pathbit/packages/container/omnirtksync/settings`) e alterar a visibilidade para **Public**.
 
 ## 2. Implantação Rápida com Docker Run
 
@@ -239,17 +239,17 @@ Para executar o sincronizador apontando para um OmniRoute já existente:
 
 ```bash
 docker run -d \
-  --name ominirtk-sync \
+  --name omnirtk-sync \
   --restart unless-stopped \
   -p 127.0.0.1:9092:9090 \
   -v omniroute_data:/app/data \
   -v "${HOME}:/root/host:ro" \
-  -v ominirtksync_logs:/app/logs \
+  -v omnirtksync_logs:/app/logs \
   -e DB_PATH=/app/data/storage.sqlite \
   -e OMNIROUTE_URL=http://host.docker.internal:20128 \
   -e DASHBOARD_USER=admin \
   -e DASHBOARD_PASSWORD=sua-senha-segura \
-  ghcr.io/pathbit/ominirtksync:latest
+  ghcr.io/pathbit/omnirtksync:latest
 ```
 
 ## 3. Implantação Completa com Docker Compose

@@ -1,7 +1,7 @@
 # Authentication
 
 The dashboard is protected by HTTP Basic Auth. Three credential sources are evaluated in a fixed
-order, implemented in [`src/omini_rtksync/auth.py`](https://github.com/pathbit/OminiRTkSync/blob/master/src/omini_rtksync/auth.py)
+order, implemented in [`src/omni_rtksync/auth.py`](https://github.com/pathbit/OmniRTkSync/blob/master/src/omni_rtksync/auth.py)
 and covered by `tests/test_auth_recovery.py`.
 
 ---
@@ -92,8 +92,8 @@ password.
 **Retrieving it later**
 
 ```bash
-docker logs ominirtk-sync 2>&1 | grep "Recovery hash"
-docker exec ominirtk-sync cat /app/data/.dashboard_recovery
+docker logs omnirtk-sync 2>&1 | grep "Recovery hash"
+docker exec omnirtk-sync cat /app/data/.dashboard_recovery
 ```
 
 **Notes**

@@ -40,13 +40,13 @@ test:
 	PYTHONPATH=src $(PYTHON) -m unittest discover -s tests -p "test_*.py"
 
 run:
-	PYTHONPATH=src $(PYTHON) -m omini_rtksync.cli --daemon
+	PYTHONPATH=src $(PYTHON) -m omni_rtksync.cli --daemon
 
 status:
-	PYTHONPATH=src $(PYTHON) -m omini_rtksync.cli --status
+	PYTHONPATH=src $(PYTHON) -m omni_rtksync.cli --status
 
 docker-build:
-	docker build -t ominirtksync:latest -t ghcr.io/pathbit/ominirtksync:latest .
+	docker build -t omnirtksync:latest -t ghcr.io/pathbit/omnirtksync:latest .
 
 # O bind em 127.0.0.1 nao e detalhe: este painel le o banco do gateway e mostra
 # a saude das credenciais. Sem o prefixo, "-p PORTA:9090" publica em TODA
@@ -54,7 +54,7 @@ docker-build:
 # deste repo publicam so no loopback. Comentario FORA da receita: linha iniciada
 # por # dentro de um alvo vai para o shell e aparece na saida.
 docker-run:
-	docker run --rm -it --name ominirtk-sync -p 127.0.0.1:9092:9090 ominirtksync:latest
+	docker run --rm -it --name omnirtk-sync -p 127.0.0.1:9092:9090 omnirtksync:latest
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
