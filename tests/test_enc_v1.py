@@ -11,7 +11,7 @@ import os
 import sqlite3
 import tempfile
 import unittest
-from unittest import mock
+import unittest.mock
 
 from omni_rtksync import gateway
 from omni_rtksync.gateway import _aes, decrypt, decrypt_if_needed, encrypt, is_encrypted
@@ -73,12 +73,12 @@ class SemBibliotecaTest(unittest.TestCase):
         os.environ.pop("STORAGE_ENCRYPTION_KEY", None)
 
     def test_decifrar_devolve_none_e_o_atalho_devolve_o_original(self) -> None:
-        with mock.patch("omni_rtksync.gateway._aes", return_value=None):
+        with unittest.mock.patch("omni_rtksync.gateway._aes", return_value=None):
             self.assertIsNone(decrypt(INTEROP_NODE))
             self.assertEqual(decrypt_if_needed(INTEROP_NODE), INTEROP_NODE)
 
     def test_cifrar_faz_passthrough(self) -> None:
-        with mock.patch("omni_rtksync.gateway._aes", return_value=None):
+        with unittest.mock.patch("omni_rtksync.gateway._aes", return_value=None):
             self.assertEqual(encrypt("claro"), "claro")
 
 
