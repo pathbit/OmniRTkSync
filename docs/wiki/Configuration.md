@@ -42,6 +42,7 @@ out and produce `BrokenPipeError` in the logs.
 | `CRON_ENABLED` | `1` | `0` disables the automatic scheduler entirely. Synchronization then only happens on a manual trigger (`--once`, the **Sync now** button, or `POST /api/sync`). |
 | `CREDENTIAL_CHECK_ENABLED` | `1` | Asks each provider whether the stored credential is still accepted. `0` turns the live check off and the panel falls back to reporting `Not checked`. |
 | `CREDENTIAL_CHECK_TIMEOUT` | `8` | Seconds allowed per credential probe. |
+| `STORAGE_ENCRYPTION_KEY` | unset | The same key the gateway uses to encrypt credentials at rest (`enc:v1`, AES-256-GCM). When set, stored credentials are decrypted for the live check and renewed tokens are written back encrypted. When unset, an encrypted credential is reported as *not verifiable from here* and writes stay in clear text, as the gateway does. |
 
 > **A token is only renewed inside the margin.** With the defaults, a token with 24 minutes left
 > is *not* renewed, because 24 min > 15 min. That is correct behavior, not a failure — the

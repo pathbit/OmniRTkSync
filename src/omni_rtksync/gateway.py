@@ -15,9 +15,11 @@ SQLite próprio, e não publica API administrativa para escrevê-los. O painel l
 o arquivo diretamente e só escreve em coluna que o schema instalado tem.
 """
 
+import hashlib
 import json
 import os
 import re
+import secrets
 import sqlite3
 import time
 import urllib.error
@@ -36,6 +38,119 @@ from .credential_check import (
 )
 from .identidade import NOME_DO_PRODUTO
 from .models import ConnectionRecord
+
+# ---------------------------------------------------------------------------
+# Armazenamento cifrado do gateway (enc:v1)
+#
+# O gateway cifra credenciais em repouso com AES-256-GCM. Formato (medido no
+# bundle do servidor):
+#
+#     enc:v1:<iv_hex>:<ciphertext_hex>:<auth_tag_hex>
+#
+# Derivacao da chave (linha exata do bundle: scryptSync(key, contexto, 32)):
+#
+#     chave32 = scrypt(senha=STORAGE_ENCRYPTION_KEY,
+#                      sal="omniroute-field-encryption-v1",
+#                      n=16384, r=8, p=1, dklen=32)
+#
+# O sal e o CONTEXTO estatico acima -- o sha256 da chave so aparece no caminho
+# legado de migracao, nao no formato vigente. A chave chega por variavel de
+# ambiente e nunca vai a log: falhas devolvem None ou o valor original, sem
+# detalhe do material.
+#
+# Vive aqui, e nao em modulo proprio, porque o formato e o nome do gateway sao
+# exatamente o que este arquivo existe para concentrar.
+# ---------------------------------------------------------------------------
+
+ENC_PREFIX = "enc:v1:"
+ENC_CONTEXT_SALT = b"omniroute-field-encryption-v1"
+
+
+def _aes():
+    """AES da pycryptodome, importada na hora do uso; None quando ausente.
+
+    Importar no topo derrubaria a coleta de qualquer ambiente que rode o
+    pacote a partir do codigo-fonte sem instalar as dependencias. Sem a
+    biblioteca o modulo se comporta como antes desta evolucao: o valor cifrado
+    segue intacto e o painel o trata como "nao verificavel daqui".
+    """
+
+    try:
+        from Crypto.Cipher import AES
+    except ImportError:
+        return None
+    return AES
+
+
+def _derive_key(secret: str) -> bytes:
+    return hashlib.scrypt(
+        secret.encode("utf-8"),
+        salt=ENC_CONTEXT_SALT,
+        n=16384,
+        r=8,
+        p=1,
+        dklen=32,
+    )
+
+
+def is_encrypted(value: object) -> bool:
+    return isinstance(value, str) and value.startswith(ENC_PREFIX)
+
+
+def decrypt(value: str, *, secret: str | None = None) -> str | None:
+    """Decifra um valor `enc:v1:`; None quando não decifra (nunca levanta).
+
+    Valores fora do formato passam intactos (passthrough), como o próprio
+    gateway faz quando a chave está ausente.
+    """
+
+    if not is_encrypted(value):
+        return value
+    secret = secret if secret is not None else os.environ.get("STORAGE_ENCRYPTION_KEY", "")
+    if not secret:
+        return None
+    parts = value[len(ENC_PREFIX) :].split(":")
+    if len(parts) != 3:
+        return None
+    aes = _aes()
+    if aes is None:
+        return None
+    iv_hex, ciphertext_hex, tag_hex = parts
+    try:
+        iv = bytes.fromhex(iv_hex)
+        ciphertext = bytes.fromhex(ciphertext_hex)
+        tag = bytes.fromhex(tag_hex)
+        cipher = aes.new(_derive_key(secret), aes.MODE_GCM, nonce=iv)
+        plaintext = cipher.decrypt(ciphertext)
+        cipher.verify(tag)
+        return plaintext.decode("utf-8")
+    except (ValueError, TypeError, UnicodeDecodeError):
+        return None
+
+
+def decrypt_if_needed(value: str) -> str:
+    """Atalho: decifra quando cifrado; devolve o original quando ilegível."""
+
+    result = decrypt(value)
+    return result if result is not None else value
+
+
+def encrypt(value: str, *, secret: str | None = None) -> str:
+    """Cifra no formato `enc:v1:`; sem chave, devolve o original (passthrough)."""
+
+    if not value or is_encrypted(value):
+        return value
+    secret = secret if secret is not None else os.environ.get("STORAGE_ENCRYPTION_KEY", "")
+    if not secret:
+        return value
+    aes = _aes()
+    if aes is None:
+        return value
+    iv = secrets.token_bytes(16)
+    cipher = aes.new(_derive_key(secret), aes.MODE_GCM, nonce=iv)
+    ciphertext, tag = cipher.encrypt_and_digest(value.encode("utf-8"))
+    return f"{ENC_PREFIX}{iv.hex()}:{ciphertext.hex()}:{tag.hex()}"
+
 
 # ---------------------------------------------------------------------------
 # Banco do gateway: leitura e mutação segura do SQLite
@@ -156,6 +271,15 @@ def get_all_connections(db_path: str) -> List[Dict[str, Any]]:
                 except Exception:
                     pass
 
+            # Credenciais em repouso sao cifradas pelo gateway (enc:v1). A leitura
+            # decifra com STORAGE_ENCRYPTION_KEY; o que nao decifra (sem chave,
+            # sem a biblioteca ou adulterado) volta intacto, e continua sendo
+            # tratado como "nao verificavel daqui". Nenhum caminho joga o
+            # material em log.
+            access_token = decrypt_if_needed(access_token) if access_token else access_token
+            refresh_token = decrypt_if_needed(refresh_token) if refresh_token else refresh_token
+            api_key = decrypt_if_needed(api_key) if api_key else api_key
+
             # provider_specific_data e onde o gateway guarda baseUrl e afins.
             specific = _decode_json(item.get("provider_specific_data")) or _decode_json(
                 extra.get("providerSpecificData")
@@ -247,6 +371,10 @@ def update_connection(
     conn = get_db_connection(db_path)
     tbl = detect_connection_table(conn)
     now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    # A escrita volta cifrada no mesmo formato do gateway (enc:v1) quando a
+    # chave esta presente; sem ela, passthrough em claro, como o gateway faz.
+    access_token = encrypt(access_token)
+    refresh_token = encrypt(refresh_token)
     try:
         cursor = conn.cursor()
         cursor.execute(f"PRAGMA table_info({tbl})")
