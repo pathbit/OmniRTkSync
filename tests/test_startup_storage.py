@@ -11,8 +11,8 @@ import os
 import tempfile
 import unittest.mock
 
-from omini_rtksync.auth import read_db_credentials, write_db_credentials
-from omini_rtksync.config import Settings
+from omni_rtksync.auth import read_db_credentials, write_db_credentials
+from omni_rtksync.config import Settings
 
 
 class TestArmazenamentoNoStartup(unittest.TestCase):

@@ -1,1 +1,1 @@
-"""Suíte de testes unitários do OminiRTKSync."""
+"""Suíte de testes unitários do OmniRTKSync."""

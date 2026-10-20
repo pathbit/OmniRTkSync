@@ -1,6 +1,6 @@
 # Architecture
 
-OminiRTKSync is a sidecar. It shares the OmniRoute SQLite file through a Docker volume and repairs the
+OmniRTKSync is a sidecar. It shares the OmniRoute SQLite file through a Docker volume and repairs the
 state the gateway keeps about its own connections.
 
 ```
@@ -11,7 +11,7 @@ state the gateway keeps about its own connections.
                         │ discovery
                         ▼
  ┌────────────┐   ┌───────────┐   shared volume   ┌──────────────┐
- │  browser   │──►│ OminiRTKSync  │◄─────────────────►│ data.sqlite  │
+ │  browser   │──►│ OmniRTKSync  │◄─────────────────►│ data.sqlite  │
  │  :9092     │   │  :9090    │                   │ providerConn │
  └────────────┘   └─────┬─────┘                   └──────▲───────┘
                         │ HTTP probe                     │
@@ -83,7 +83,7 @@ Two conventions matter:
 
 - **`expires_at`.** A TEXT column read with `new Date(...)`, so a numeric epoch written as text
   becomes an Invalid Date and the gateway concludes the connection has no known expiry.
-  OminiRTKSync writes **ISO-8601 UTC**.
+  OmniRTKSync writes **ISO-8601 UTC**.
 - **`test_status`.** OmniRoute only treats `"active"` as healthy; `"ok"` is not recognised and
   makes the connection look like it is in an error state.
 
@@ -116,7 +116,7 @@ Written next to the database (or `DATA_DIR`), never inside the gateway's schema:
 | `.dashboard_auth.json` | Credentials set from the screen. |
 | `.dashboard_recovery` | Break-glass hash, mode `0600`. |
 | `ui_prefs.sqlite` | Interface language. |
-| `logs/ominirtksync.log` | Rotating persistent log. |
+| `logs/omnirtksync.log` | Rotating persistent log. |
 
 
 ## Encryption at rest

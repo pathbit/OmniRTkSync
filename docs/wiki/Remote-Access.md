@@ -237,7 +237,7 @@ TS_AUTHKEY=tskey-auth-...
 docker compose -f docker-compose.example.yml --profile tailnet up -d
 
 # 4. descubra o nome na tailnet
-docker exec ominirtk-tailnet tailscale status
+docker exec omnirtk-tailnet tailscale status
 ```
 
 Chave **efêmera** de propósito: o nó some sozinho da sua tailnet quando o

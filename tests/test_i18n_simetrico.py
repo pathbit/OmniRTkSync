@@ -13,7 +13,7 @@ devolve o texto sem substituir, sem erro nenhum.
 import re
 import unittest
 
-from omini_rtksync.i18n import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
+from omni_rtksync.i18n import DEFAULT_LANGUAGE, LANGUAGES, TRANSLATIONS
 
 RX_MARCADOR = re.compile(r"\{([a-z_]+)\}")
 

@@ -15,7 +15,7 @@ import re
 import unittest
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
-FONTE = RAIZ / "src" / "omini_rtksync"
+FONTE = RAIZ / "src" / "omni_rtksync"
 
 # Senhas de fábrica conhecidas dos gateways que este projeto acompanha. A senha
 # REAL da instalação não entra aqui: ela é lida do .env em tempo de execução,

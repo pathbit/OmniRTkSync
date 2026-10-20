@@ -9,8 +9,8 @@ import time
 import unittest
 import urllib.request
 
-from omini_rtksync.config import Settings
-from omini_rtksync import web as web_server
+from omni_rtksync.config import Settings
+from omni_rtksync import web as web_server
 
 
 class TestHealthzResilience(unittest.TestCase):

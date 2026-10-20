@@ -1,12 +1,12 @@
-# OminiRTKSync · OminiRoute Universal Token & Connection Synchronizer
+# OmniRTKSync · OmniRoute Universal Token & Connection Synchronizer
 
-[![CI](https://github.com/pathbit/OminiRTkSync/actions/workflows/ci.yml/badge.svg)](https://github.com/pathbit/OminiRTkSync/actions/workflows/ci.yml)
-[![Release and Docker Package](https://github.com/pathbit/OminiRTkSync/actions/workflows/release.yml/badge.svg)](https://github.com/pathbit/OminiRTkSync/actions/workflows/release.yml)
+[![CI](https://github.com/pathbit/OmniRTkSync/actions/workflows/ci.yml/badge.svg)](https://github.com/pathbit/OmniRTkSync/actions/workflows/ci.yml)
+[![Release and Docker Package](https://github.com/pathbit/OmniRTkSync/actions/workflows/release.yml/badge.svg)](https://github.com/pathbit/OmniRTkSync/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.14.7-blue.svg)](https://www.python.org/ftp/python/3.14.7/python-3.14.7-macos11.pkg)
-[![Docker Package](https://img.shields.io/badge/docker-ghcr.io%2Fpathbit%2Fominirtksync-blue)](https://github.com/pathbit/OminiRTkSync/pkgs/container/ominirtksync)
+[![Docker Package](https://img.shields.io/badge/docker-ghcr.io%2Fpathbit%2Fomnirtksync-blue)](https://github.com/pathbit/OmniRTkSync/pkgs/container/omnirtksync)
 
-**`OminiRTKSync`** (*OminiRoute Universal Token & Connection Synchronizer*) is the dedicated connection synchronizer and guardian for the [OmniRoute](https://github.com/diegosouzapw/OmniRoute) gateway. It manages relational credential persistence, proactive OAuth token renewal, and prevents routing outages in artificial intelligence workloads.
+**`OmniRTKSync`** (*OmniRoute Universal Token & Connection Synchronizer*) is the dedicated connection synchronizer and guardian for the [OmniRoute](https://github.com/diegosouzapw/OmniRoute) gateway. It manages relational credential persistence, proactive OAuth token renewal, and prevents routing outages in artificial intelligence workloads.
 
 If you are running the original 9Router, use the sibling project [9RTKSync](https://github.com/pathbit/9RTKSync), configured for the [9Router](https://github.com/decolua/9router) architecture.
 
@@ -65,7 +65,7 @@ On first boot with `DASHBOARD_PASSWORD` empty, the container generates a
 **recovery credential** and writes it inside the data directory. Read it:
 
 ```bash
-docker exec ominirtk-sync cat /app/data/.dashboard_recovery
+docker exec omnirtk-sync cat /app/data/.dashboard_recovery
 ```
 
 Sign in as `admin` with that value, then set a real password on the screen. The
@@ -110,7 +110,7 @@ same goes for the gateways: each one has its own.
 | OmniRoute | `20128` | `8082` |
 | LiteLLM | `4000` | `8083` |
 | 9RTKSync (dashboard) | `9090` | `9091` |
-| OminiRTkSync (dashboard) | `9090` | `9092` |
+| OmniRTkSync (dashboard) | `9090` | `9092` |
 | LiteLlmRTKSync (dashboard) | `9090` | `9093` |
 
 The article stack (`claudegravity`) keeps **`20128`**, the default 9Router port.
@@ -126,23 +126,23 @@ port, the one the process listens on.
 Official multi-architecture Docker images (`linux/amd64` and `linux/arm64`) are published automatically to the GitHub Container Registry (GHCR) on pushes to `master` and version tags (`v*.*.*`). An automated retention policy maintains strictly the last 3 versions. For a complete deployment guide covering Docker run, Compose, Headroom, Caveman, Cloudflare Tunnel, and Tailscale, see [Docker Deployment Guide](docs/wiki/Docker-Deployment.md).
 
 ```bash
-docker pull ghcr.io/pathbit/ominirtksync:latest
+docker pull ghcr.io/pathbit/omnirtksync:latest
 ```
 
 ### Docker Compose Example
 
-Add `OminiRTKSync` to your `docker-compose.yml` alongside [OmniRoute](https://github.com/diegosouzapw/OmniRoute):
+Add `OmniRTKSync` to your `docker-compose.yml` alongside [OmniRoute](https://github.com/diegosouzapw/OmniRoute):
 
 ```yaml
-name: ominirtksync-stack
+name: omnirtksync-stack
 
 services:
-  ominirtk-router:
+  omnirtk-router:
     image: diegosouzapw/omniroute:latest
-    container_name: ominirtk-router
-    hostname: ominirtk-router
+    container_name: omnirtk-router
+    hostname: omnirtk-router
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     restart: unless-stopped
     ports:
       # Porta interna 20128 (padrao do OmniRoute); publicada em 8082 no host.
@@ -176,16 +176,16 @@ services:
       # O primeiro boot roda as migracoes e cria o storage.sqlite; da folga.
       start_period: 40s
 
-  ominirtk-sync:
+  omnirtk-sync:
     # Mesmo uid do gateway. Os dois compartilham o volume, e rodando como root
     # os diretorios criados no startup nasciam com dono root: o omniroute --
     # que roda como `node` (1000) -- perdia a escrita no proprio volume.
     user: "1000:1000"
-    image: ghcr.io/pathbit/ominirtksync:latest
-    container_name: ominirtk-sync
-    hostname: ominirtk-sync
+    image: ghcr.io/pathbit/omnirtksync:latest
+    container_name: omnirtk-sync
+    hostname: omnirtk-sync
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     restart: unless-stopped
     ports:
       # Porta interna 9090 (igual no 9RTKSync); publicada em 9092 no host.
@@ -193,11 +193,11 @@ services:
     volumes:
       - omniroute_data:/app/data
       - ${HOME}:/root/host:ro
-      - ominirtksync_logs:/app/logs
+      - omnirtksync_logs:/app/logs
     environment:
       - HOST_HOME=/root/host
       - DB_PATH=/app/data/storage.sqlite
-      - OMNIROUTE_URL=${OMNIROUTE_URL:-http://ominirtk-router:20128}
+      - OMNIROUTE_URL=${OMNIROUTE_URL:-http://omnirtk-router:20128}
       - SYNC_INTERVAL=${SYNC_INTERVAL:-300}
       - REFRESH_MARGIN=${REFRESH_MARGIN:-900}
       - ENABLE_WEB_DASHBOARD=${ENABLE_WEB_DASHBOARD:-1}
@@ -207,7 +207,7 @@ services:
       - LOG_DIR=${LOG_DIR:-/app/logs}
       - LOG_RETENTION_DAYS=${LOG_RETENTION_DAYS:-30}
     depends_on:
-      ominirtk-router:
+      omnirtk-router:
         # Esperar o gateway ficar saudavel, e nao apenas iniciado: o OmniRoute
         # cria o storage.sqlite durante o proprio boot, e subir antes disso faz
         # o primeiro ciclo encontrar o banco ausente.
@@ -221,11 +221,11 @@ services:
 
 volumes:
   omniroute_data:
-  ominirtksync_logs:
+  omnirtksync_logs:
 
 networks:
-  ominirtksync-net:
-    name: ominirtksync-net
+  omnirtksync-net:
+    name: omnirtksync-net
     # Rede propria da stack. Na rede default, duas stacks no mesmo daemon
     # resolvem o mesmo nome curto e nao da para saber a qual gateway o
     # sincronizador se conectou.
@@ -240,8 +240,8 @@ Following standard environment isolation, local runs strictly use a Python virtu
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/pathbit/OminiRTkSync.git
-cd OminiRTkSync
+git clone https://github.com/pathbit/OmniRTkSync.git
+cd OmniRTkSync
 ```
 
 ### 2. Create and Activate the Virtual Environment
@@ -265,13 +265,13 @@ cp .env.example .env
 
 ```bash
 # View current status of OmniRoute connections
-OminiRTKSync --status --db-path /path/to/storage.sqlite
+OmniRTKSync --status --db-path /path/to/storage.sqlite
 
 # Run an immediate one-shot synchronization pass
-OminiRTKSync --once --db-path /path/to/storage.sqlite
+OmniRTKSync --once --db-path /path/to/storage.sqlite
 
 # Run continuous background daemon with web dashboard on port 9090 (published on 9092)
-OminiRTKSync --daemon --db-path /path/to/storage.sqlite
+OmniRTKSync --daemon --db-path /path/to/storage.sqlite
 ```
 
 ---
@@ -351,14 +351,14 @@ python3 -m unittest tests/test_container.py -v
 ## Contributing and Branch Protection
 
 * The `master` branch is protected. All contributions must be submitted through Pull Requests and pass all CI checks.
-* For bug reports or new provider requests, please open an issue in [GitHub Issues](https://github.com/pathbit/OminiRTkSync/issues).
+* For bug reports or new provider requests, please open an issue in [GitHub Issues](https://github.com/pathbit/OmniRTkSync/issues).
 * Official upstream gateway: [OmniRoute on GitHub](https://github.com/diegosouzapw/OmniRoute).
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. The full text is available in [LICENSE](https://github.com/pathbit/OminiRTkSync/blob/master/LICENSE).
+Distributed under the MIT License. The full text is available in [LICENSE](https://github.com/pathbit/OmniRTkSync/blob/master/LICENSE).
 
 In practice: use, copy, modify, and distribute freely, including commercially, provided that copyright and license notices accompany copies. The software is provided as is, without warranty.
 

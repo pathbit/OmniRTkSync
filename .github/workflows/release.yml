@@ -40,8 +40,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install .
-          ominirtksync --help
-          OminiRTKSync --help
+          omnirtksync --help
+          OmniRTKSync --help
 
   build-and-push-docker:
     name: Build and Push Multi-Arch Docker Image (x86_64 and arm64)
@@ -99,9 +99,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          name: OminiRTKSync ${{ github.ref_name }}
+          name: OmniRTKSync ${{ github.ref_name }}
           body: |
-            ## OminiRTKSync Docker Package
+            ## OmniRTKSync Docker Package
             
             Multi-arch Docker image (linux/amd64, linux/arm64) published to GitHub Container Registry:
             ```bash
@@ -119,7 +119,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: ${{ github.repository_owner }}
-          packages: ominirtksync
+          packages: omnirtksync
           keep-n-tagged: 2
           exclude-tags: latest
           delete-untagged: true

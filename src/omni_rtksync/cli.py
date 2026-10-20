@@ -346,7 +346,7 @@ def print_status(settings: Settings):
         sys.exit(1)
 
     print("\n" + "=" * 74)
-    print("[*] OMINIRTKSYNC · STATUS DAS CONEXÕES DO OMNIROUTE")
+    print("[*] OMNIRTKSYNC · STATUS DAS CONEXÕES DO OMNIROUTE")
     print(f"   Banco de Dados: {settings.db_path}")
     print("=" * 74)
 
@@ -380,7 +380,7 @@ def run_daemon(settings: Settings):
     signal.signal(signal.SIGTERM, handle_signal)
 
     print("=" * 74, flush=True)
-    print("[*] OMINIRTKSYNC · OMNIROUTE UNIVERSAL TOKEN & CONNECTION SYNCHRONIZER", flush=True)
+    print("[*] OMNIRTKSYNC · OMNIROUTE UNIVERSAL TOKEN & CONNECTION SYNCHRONIZER", flush=True)
     print(f"   Banco SQLite: {settings.db_path}", flush=True)
     print(f"   Gateway URL:  {settings.omniroute_url}", flush=True)
     print(f"   Host Home:    {engine.discovery.host_home}", flush=True)
@@ -431,7 +431,7 @@ def run_daemon(settings: Settings):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="ominirtksync",
+        prog="omnirtksync",
         description=f"{NOME_DO_PRODUTO} · {NOME_DO_GATEWAY} Universal Token & Connection Sync",
     )
     parser.add_argument("--db-path", dest="db_path", help=f"Caminho para o storage.sqlite do {NOME_DO_GATEWAY}")

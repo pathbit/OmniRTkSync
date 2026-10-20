@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "OminiRTKSync"
+name = "OmniRTKSync"
 version = "1.0.0"
-description = "OminiRoute Universal Token & Connection Synchronizer"
+description = "OmniRoute Universal Token & Connection Synchronizer"
 readme = "README.md"
 authors = [
     { name = "Eliel Sousa", email = "eliel@pathbit.co" }
@@ -34,14 +34,14 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pathbit/OminiRTkSync"
-Repository = "https://github.com/pathbit/OminiRTkSync"
-Issues = "https://github.com/pathbit/OminiRTkSync/issues"
+Homepage = "https://github.com/pathbit/OmniRTkSync"
+Repository = "https://github.com/pathbit/OmniRTkSync"
+Issues = "https://github.com/pathbit/OmniRTkSync/issues"
 
 [project.scripts]
-ominirtksync = "omini_rtksync.cli:main"
-OminiRTKSync = "omini_rtksync.cli:main"
-omini-rtksync = "omini_rtksync.cli:main"
+omnirtksync = "omni_rtksync.cli:main"
+OmniRTKSync = "omni_rtksync.cli:main"
+omni-rtksync = "omni_rtksync.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

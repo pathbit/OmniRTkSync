@@ -16,7 +16,7 @@ import re
 import unittest
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
-FONTE = RAIZ / "src" / "omini_rtksync"
+FONTE = RAIZ / "src" / "omni_rtksync"
 CATALOGO = FONTE / "i18n.py"
 
 LOCALES = FONTE / "locales"

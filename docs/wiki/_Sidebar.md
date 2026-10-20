@@ -1,4 +1,4 @@
-### OminiRTKSync
+### OmniRTKSync
 
 - [Home](Home)
 - [Installation](Installation)
@@ -18,4 +18,4 @@
 
 ---
 
-Edited in [`docs/wiki/`](https://github.com/pathbit/OminiRTkSync/tree/master/docs/wiki)
+Edited in [`docs/wiki/`](https://github.com/pathbit/OmniRTkSync/tree/master/docs/wiki)

@@ -5,7 +5,7 @@ import tempfile
 import unittest
 import unittest.mock
 
-from omini_rtksync.config import load_dotenv, Settings
+from omni_rtksync.config import load_dotenv, Settings
 
 
 class TestConfigEnv(unittest.TestCase):

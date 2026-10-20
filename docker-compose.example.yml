@@ -1,15 +1,15 @@
-name: ominirtksync-stack
+name: omnirtksync-stack
 
 services:
-  ominirtk-router:
+  omnirtk-router:
     image: diegosouzapw/omniroute:latest
-    container_name: ominirtk-router
-    hostname: ominirtk-router
+    container_name: omnirtk-router
+    hostname: omnirtk-router
     networks:
       # Duas redes de proposito (ver o bloco `networks:` no fim do arquivo):
       # a propria, de gestao, onde so o sincronizador desta stack o alcanca; e
-      # a de inferencia, onde o LiteLLM o encontra pelo nome `ominirtk-router`.
-      - ominirtksync-net
+      # a de inferencia, onde o LiteLLM o encontra pelo nome `omnirtk-router`.
+      - omnirtksync-net
       - rtk-inference-net
     restart: unless-stopped
     ports:
@@ -49,18 +49,18 @@ services:
       # O primeiro boot roda as migracoes e cria o storage.sqlite; da folga.
       start_period: 40s
 
-  ominirtk-sync:
+  omnirtk-sync:
     # Mesmo uid do gateway. Os dois compartilham o volume, e este servico
     # cria db/ e logs/ no startup: rodando como root, esses diretorios
     # nasciam com dono root e o omniroute -- que roda como `node` (1000) --
     # perdia a escrita no proprio volume, recusando o login com
     # "EACCES: permission denied, mkdir '/app/data/db/backups'".
     user: "1000:1000"
-    image: ghcr.io/pathbit/ominirtksync:latest
-    container_name: ominirtk-sync
-    hostname: ominirtk-sync
+    image: ghcr.io/pathbit/omnirtksync:latest
+    container_name: omnirtk-sync
+    hostname: omnirtk-sync
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     restart: unless-stopped
     ports:
       # Porta interna 9090 (igual no 9RTKSync); publicada em 9092 no host.
@@ -69,11 +69,11 @@ services:
     volumes:
       - omniroute_data:/app/data
       - ${HOME}:/root/host:ro
-      - ominirtksync_logs:/app/logs
+      - omnirtksync_logs:/app/logs
     environment:
       - HOST_HOME=/root/host
       - DB_PATH=/app/data/storage.sqlite
-      - OMNIROUTE_URL=${OMNIROUTE_URL:-http://ominirtk-router:20128}
+      - OMNIROUTE_URL=${OMNIROUTE_URL:-http://omnirtk-router:20128}
       - SYNC_INTERVAL=${SYNC_INTERVAL:-300}
       - REFRESH_MARGIN=${REFRESH_MARGIN:-900}
       - ENABLE_WEB_DASHBOARD=${ENABLE_WEB_DASHBOARD:-1}
@@ -104,7 +104,7 @@ services:
       - LOG_RETENTION_DAYS=${LOG_RETENTION_DAYS:-30}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
     depends_on:
-      ominirtk-router:
+      omnirtk-router:
         # Esperar o gateway ficar saudavel, e nao apenas iniciado: o OmniRoute
         # cria o storage.sqlite durante o proprio boot, e subir antes disso faz
         # o primeiro ciclo encontrar o banco ausente.
@@ -134,14 +134,14 @@ services:
   # raciocinio se inverte -- e o proprio painel do gateway avisa isso em
   # vermelho ("Change the default dashboard password before activating the
   # tunnel").
-  ominirtk-tunel:
+  omnirtk-tunel:
     # Um container em vez do botao do gateway: o botao instala o cloudflared
     # DENTRO do container do gateway, que e efemero -- recriar a stack desfaz a
     # instalacao. Aqui o tunel e uma peca declarada, que sobe e desce com o
     # resto e deixa rastro no compose.
     image: cloudflare/cloudflared:latest
-    container_name: ominirtk-tunel
-    hostname: ominirtk-tunel
+    container_name: omnirtk-tunel
+    hostname: omnirtk-tunel
     profiles: ["tunel"]
     restart: unless-stopped
     # Sem TUNNEL_TOKEN: quick tunnel, URL aleatoria a cada subida, zero
@@ -151,25 +151,25 @@ services:
     command: >-
       tunnel --no-autoupdate
       ${TUNNEL_TOKEN:+run --token ${TUNNEL_TOKEN}}
-      ${TUNNEL_TOKEN:---url http://ominirtk-router:20128}
+      ${TUNNEL_TOKEN:---url http://omnirtk-router:20128}
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     depends_on:
-      - ominirtk-router
+      - omnirtk-router
 
-  ominirtk-tailnet:
+  omnirtk-tailnet:
     # Diferenca que decide a escolha: o tunel da uma URL que QUALQUER UM com o
     # endereco alcanca; a tailnet so admite dispositivo que voce cadastrou.
     # Para um painel que le credenciais, a segunda e quase sempre a certa.
     image: tailscale/tailscale:latest
-    container_name: ominirtk-tailnet
+    container_name: omnirtk-tailnet
     # UNICA excecao a regra "container_name igual ao hostname" desta stack, e de
     # proposito: o hostname deste container vira o NOME DO NO na tailnet, ou seja,
-    # o endereco que voce digita no navegador (http://ominirtk:9090). Com
-    # `ominirtk-tailnet` viraria http://ominirtk-tailnet:9090 -- mais longo de
+    # o endereco que voce digita no navegador (http://omnirtk:9090). Com
+    # `omnirtk-tailnet` viraria http://omnirtk-tailnet:9090 -- mais longo de
     # digitar, e sem ganho nenhum, porque dentro da stack ninguem alcanca este
     # container pelo nome: ele existe para expor o painel para FORA.
-    hostname: ominirtk
+    hostname: omnirtk
     profiles: ["tailnet"]
     restart: unless-stopped
     environment:
@@ -184,39 +184,39 @@ services:
       # Publica o painel e o gateway na tailnet, cada um na sua porta.
       - TS_SERVE_CONFIG=/config/serve.json
     volumes:
-      - ominirtk_tailnet:/var/lib/tailscale
+      - omnirtk_tailnet:/var/lib/tailscale
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
 
   # --- Otimizacao de tokens (opcional) --------------------------------------
   #
   # Comprime payloads de contexto e reduz custos de tokens para agentes de IA (Claude
   # Code, Cursor, Windsurf) intermediando chamadas antes do gateway:
   #   docker compose --profile headroom up -d
-  ominirtk-headroom:
+  omnirtk-headroom:
     image: ghcr.io/headroomlabs-ai/headroom:latest
-    container_name: ominirtk-headroom
-    hostname: ominirtk-headroom
+    container_name: omnirtk-headroom
+    hostname: omnirtk-headroom
     profiles: ["headroom"]
     restart: unless-stopped
     ports:
       - "127.0.0.1:8787:8787"
     environment:
-      - UPSTREAM_URL=http://ominirtk-router:20128
+      - UPSTREAM_URL=http://omnirtk-router:20128
       - PORT=8787
     networks:
-      - ominirtksync-net
+      - omnirtksync-net
     depends_on:
-      - ominirtk-router
+      - omnirtk-router
 
 volumes:
-  ominirtk_tailnet:
+  omnirtk_tailnet:
   omniroute_data:
-  ominirtksync_logs:
+  omnirtksync_logs:
 
 networks:
-  ominirtksync-net:
-    name: ominirtksync-net
+  omnirtksync-net:
+    name: omnirtksync-net
     # Rede propria da stack. Na rede default, duas stacks no mesmo
     # daemon resolvem o mesmo nome curto e nao da para saber a qual
     # gateway o sincronizador se conectou.
@@ -224,7 +224,7 @@ networks:
   # POR QUE SAO DUAS REDES
   #
   # A de cima e de GESTAO e continua isolada: so o sincronizador desta stack
-  # fala com este gateway. E isso que garante que o painel do OminiRTkSync
+  # fala com este gateway. E isso que garante que o painel do OmniRTkSync
   # nunca leia, sem querer, o gateway do irmao -- antes, com todos na rede
   # default, o mesmo nome curto resolvia para stacks diferentes e ninguem
   # sabia a qual gateway o painel estava conectado. Nao desfaca.
@@ -232,7 +232,7 @@ networks:
   # Esta e de INFERENCIA e e compartilhada de proposito: e o unico lugar onde
   # o LiteLLM (litellmrtk-router) e os gateways se enxergam, para que uma
   # requisicao que chega no LiteLLM possa sair por
-  # http://ominirtk-router:20128/v1. So os gateways e o LiteLLM entram nela;
+  # http://omnirtk-router:20128/v1. So os gateways e o LiteLLM entram nela;
   # os sincronizadores NAO -- eles nao tem o que fazer no caminho de
   # inferencia, e mante-los de fora preserva o isolamento de gestao.
   #

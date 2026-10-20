@@ -18,15 +18,15 @@ import sqlite3
 import tempfile
 import unittest.mock
 
-from omini_rtksync.credential_check import (
+from omni_rtksync.credential_check import (
     STATE_UNREACHABLE,
     STATE_VALID,
     CheckResult,
     _classify,
     check_api_key,
 )
-from omini_rtksync.gateway import get_all_connections, update_connection_health
-from omini_rtksync.gateway import ApiKeyProvider, LocalProvider
+from omni_rtksync.gateway import get_all_connections, update_connection_health
+from omni_rtksync.gateway import ApiKeyProvider, LocalProvider
 
 
 LOCAL = {
@@ -65,7 +65,7 @@ class TestVerificacaoNaoERenovacao(unittest.TestCase):
     def test_a_plain_validation_does_not_count_as_a_renewal(self):
         provider = ApiKeyProvider(validate_credentials=True)
         with unittest.mock.patch(
-            "omini_rtksync.gateway.check_connection",
+            "omni_rtksync.gateway.check_connection",
             return_value=CheckResult(state=STATE_VALID, detail="ok", checked_at="2026-01-01T00:00:00Z"),
         ):
             renewed, data, _ = provider.check_and_refresh(dict(NUVEM))
@@ -105,7 +105,7 @@ class TestEnderecoDeclaradoVenceONome(unittest.TestCase):
             vistas.append(request.full_url)
             return CheckResult(state=STATE_VALID, detail="ok", checked_at="2026-01-01T00:00:00Z")
 
-        with unittest.mock.patch("omini_rtksync.credential_check._execute", side_effect=espiao):
+        with unittest.mock.patch("omni_rtksync.credential_check._execute", side_effect=espiao):
             check_api_key(provider, "k", base_url=base_url)
         return vistas
 

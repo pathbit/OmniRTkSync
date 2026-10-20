@@ -7,9 +7,9 @@ import tempfile
 import pathlib
 import unittest.mock
 
-from omini_rtksync import cli as omini_rtksync_cli
+from omni_rtksync import cli as omni_rtksync_cli
 
-from omini_rtksync.auth import (
+from omni_rtksync.auth import (
     constant_time_equals,
     derive_recovery_hash,
     ensure_recovery_hash,
@@ -17,7 +17,7 @@ from omini_rtksync.auth import (
     resolve_recovery_hash,
     verify_credentials,
 )
-from omini_rtksync.config import Settings
+from omni_rtksync.config import Settings
 
 FACTORY = {"factory_user": "admin", "factory_password": "pathbit"}
 
@@ -201,7 +201,7 @@ class TestRecoveryHashIsNeverLogged(unittest.TestCase):
     """O stdout do container e coletado e encaminhado: credencial funcional nao vai para la."""
 
     def test_the_startup_log_does_not_print_the_hash(self):
-        source = pathlib.Path(omini_rtksync_cli.__file__).read_text(encoding="utf-8")
+        source = pathlib.Path(omni_rtksync_cli.__file__).read_text(encoding="utf-8")
         block = source[source.index("ensure_recovery_hash()"):]
         block = block[: block.index("if args.db_path")]
         # A chamada de log pode citar o caminho do arquivo, nunca o valor.

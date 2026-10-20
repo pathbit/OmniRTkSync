@@ -13,9 +13,9 @@ import pathlib
 import re
 import unittest
 
-import omini_rtksync
+import omni_rtksync
 
-RAIZ_PACOTE = pathlib.Path(omini_rtksync.__file__).parent
+RAIZ_PACOTE = pathlib.Path(omni_rtksync.__file__).parent
 RAIZ_REPO = RAIZ_PACOTE.parent.parent
 ENV_EXAMPLE = RAIZ_REPO / ".env.example"
 

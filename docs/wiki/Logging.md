@@ -4,7 +4,7 @@ Container stdout is volatile: it disappears on `docker rm`, gets truncated by th
 does not survive a restart. Events that matter for auditing — token renewals, sync failures,
 dashboard access — are therefore also written to a file, with daily rotation and age-based purge.
 
-Implemented in [`src/omini_rtksync/logs.py`](https://github.com/pathbit/OminiRTkSync/blob/master/src/omini_rtksync/logs.py),
+Implemented in [`src/omni_rtksync/logs.py`](https://github.com/pathbit/OmniRTkSync/blob/master/src/omni_rtksync/logs.py),
 covered by `tests/test_logs.py`.
 
 ---
@@ -13,7 +13,7 @@ covered by `tests/test_logs.py`.
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `LOG_DIR` | `<DB_PATH dir>/logs` | Destination directory. Falls back to `~/.ominirtksync/logs` when the database directory is not writable. |
+| `LOG_DIR` | `<DB_PATH dir>/logs` | Destination directory. Falls back to `~/.omnirtksync/logs` when the database directory is not writable. |
 | `LOG_RETENTION_DAYS` | `30` | Days a rotated file is kept. Minimum `1`; an unparseable value falls back to 30. |
 | `LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
 | `LOG_TO_STDOUT` | `1` | `0` stops mirroring on stdout. The file keeps receiving everything. |
@@ -22,21 +22,21 @@ covered by `tests/test_logs.py`.
 
 ## Rotation and retention
 
-- One file, `ominirtksync.log`, rotated at **UTC midnight**.
-- Rotated files are named `ominirtksync.log.YYYY-MM-DD`.
+- One file, `omnirtksync.log`, rotated at **UTC midnight**.
+- Rotated files are named `omnirtksync.log.YYYY-MM-DD`.
 - `backupCount` equals `LOG_RETENTION_DAYS`, so daily rotation keeps exactly that many days.
 - On every startup, `purge_expired_logs()` also deletes rotated files whose modification time is
   older than the retention window. This catches files left behind by a container that was down
   for a while.
 
-**Never touched:** the active `ominirtksync.log`, and any file that does not belong to this service.
+**Never touched:** the active `omnirtksync.log`, and any file that does not belong to this service.
 Another service's logs sharing the same directory are left alone.
 
 ```
 /app/data/logs/
-  ominirtksync.log                ← active, never purged
-  ominirtksync.log.2026-09-11     ← kept (2 days old)
-  ominirtksync.log.2026-07-01     ← purged (73 days old, retention 30)
+  omnirtksync.log                ← active, never purged
+  omnirtksync.log.2026-09-11     ← kept (2 days old)
+  omnirtksync.log.2026-07-01     ← purged (73 days old, retention 30)
   other-service.log.2026-01-01 ← left alone, not ours
 ```
 
@@ -48,7 +48,7 @@ Another service's logs sharing the same directory are left alone.
 environment:
   - LOG_RETENTION_DAYS=90
 volumes:
-  - ominirtksync_logs:/app/data/logs
+  - omnirtksync_logs:/app/data/logs
 ```
 
 Mount a named volume (or a host path) or the files die with the container, which defeats the

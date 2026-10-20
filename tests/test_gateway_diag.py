@@ -9,11 +9,11 @@ import urllib.request
 import unittest
 from unittest.mock import patch, MagicMock
 
-from omini_rtksync.config import Settings
-from omini_rtksync.web import start_web_server
+from omni_rtksync.config import Settings
+from omni_rtksync.web import start_web_server
 
 
-class TestOminiGatewayDiag(unittest.TestCase):
+class TestOmniGatewayDiag(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp_dir = tempfile.TemporaryDirectory()
@@ -55,7 +55,7 @@ class TestOminiGatewayDiag(unittest.TestCase):
                 return mock_resp
             return orig_req(req, *args, **kwargs)
 
-        with patch("omini_rtksync.web.urllib.request.urlopen", side_effect=mock_urlopen):
+        with patch("omni_rtksync.web.urllib.request.urlopen", side_effect=mock_urlopen):
             url = f"http://127.0.0.1:{self.settings.web_port}/api/test-gateway"
             auth = base64.b64encode(b"admin:testpassword").decode("utf-8")
             req = urllib.request.Request(url, data=b"{}", headers={"Authorization": f"Basic {auth}"})

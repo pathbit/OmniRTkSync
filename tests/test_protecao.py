@@ -7,7 +7,7 @@ freio tem de já estar instalado quando ele apertar.
 
 import unittest
 
-from omini_rtksync import protecao
+from omni_rtksync import protecao
 
 
 class TetoPorJanela(unittest.TestCase):

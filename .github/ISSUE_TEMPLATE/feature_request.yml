@@ -1,12 +1,12 @@
 name: Sugestão de Melhoria / Provedor
-description: Sugira uma nova funcionalidade, provedor ou melhoria para o OminiRTKSync
+description: Sugira uma nova funcionalidade, provedor ou melhoria para o OmniRTKSync
 title: "[FEAT] "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Obrigado por propor melhorias para o OminiRTKSync!
+        Obrigado por propor melhorias para o OmniRTKSync!
   - type: textarea
     id: idea
     attributes:
@@ -18,4 +18,4 @@ body:
     id: context
     attributes:
       label: Contexto no OmniRoute
-      description: Como o OmniRoute gerencia essa conexão e de que forma o OminiRTKSync deve interagir?
+      description: Como o OmniRoute gerencia essa conexão e de que forma o OmniRTKSync deve interagir?

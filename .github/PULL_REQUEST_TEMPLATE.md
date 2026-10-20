@@ -1,6 +1,6 @@
 ## Descrição das Alterações
 
-Explique de forma clara e objetiva o que este Pull Request resolve, aprimora ou adiciona ao `OminiRTKSync`.
+Explique de forma clara e objetiva o que este Pull Request resolve, aprimora ou adiciona ao `OmniRTKSync`.
 
 ## Tipo de Alteração
 

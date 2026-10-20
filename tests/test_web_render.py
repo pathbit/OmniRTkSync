@@ -11,11 +11,11 @@ from datetime import datetime, timezone
 import urllib.error
 import urllib.request
 
-from omini_rtksync import i18n
-from omini_rtksync.config import Settings
-from omini_rtksync.models import ConnectionRecord
-from omini_rtksync import render
-from omini_rtksync import web as web_server
+from omni_rtksync import i18n
+from omni_rtksync.config import Settings
+from omni_rtksync.models import ConnectionRecord
+from omni_rtksync import render
+from omni_rtksync import web as web_server
 
 # Faixas de emoji que não podem aparecer na interface (o padrão é fonte de ícones).
 EMOJI_PATTERN = re.compile(
@@ -129,10 +129,10 @@ class TestDashboardMarkup(unittest.TestCase):
             cron={"active": True, "intervalSeconds": 300, "totalRuns": 4, "totalRenewals": 0,
                   "lastRunAt": "2026-09-12T13:46:53Z", "nextRunAt": "2026-09-12T13:51:53Z",
                   "lastResult": {"totalInspected": 7, "refreshedCount": 0, "durationMs": 5}},
-            gateway={"url": "http://ominirtk-router:20128", "online": True, "statusCode": 200,
+            gateway={"url": "http://omnirtk-router:20128", "online": True, "statusCode": 200,
                      "latencyMs": 9, "dbSummary": "Operacional (7 conexoes, 5 combos)"},
             db_path="/app/data/db/data.sqlite",
-            router_url="http://ominirtk-router:20128",
+            router_url="http://omnirtk-router:20128",
             current_user="admin",
             is_default_password=True,
             refresh_margin=900,

@@ -1,4 +1,4 @@
-name: ominirtk-egress
+name: omnirtk-egress
 
 # Bancada para testar POR ONDE o trafego sai.
 #
@@ -21,7 +21,7 @@ services:
   # se o vinculo por conta realmente separa as saidas.
   proxy-a:
     image: ubuntu/squid:latest
-    container_name: ominirtk-proxy-a
+    container_name: omnirtk-proxy-a
     restart: unless-stopped
     ports:
       - "127.0.0.1:18091:3128"
@@ -43,7 +43,7 @@ services:
 
   proxy-b:
     image: ubuntu/squid:latest
-    container_name: ominirtk-proxy-b
+    container_name: omnirtk-proxy-b
     restart: unless-stopped
     ports:
       - "127.0.0.1:18092:3128"
@@ -68,7 +68,7 @@ services:
   # direto da maquina.
   echo:
     image: python:3.12-alpine
-    container_name: ominirtk-echo
+    container_name: omnirtk-echo
     restart: unless-stopped
     ports:
       - "127.0.0.1:18090:8080"
@@ -113,8 +113,8 @@ services:
 networks:
   egress:
     # Nome declarado, e nao derivado do nome do projeto: sem isto a rede nasce
-    # como `ominirtk-egress_egress` e o endereco depende do diretorio.
-    name: ominirtk-egress-net
+    # como `omnirtk-egress_egress` e o endereco depende do diretorio.
+    name: omnirtk-egress-net
     ipam:
       config:
         - subnet: 172.32.0.0/24

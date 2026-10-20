@@ -18,9 +18,9 @@ import unittest
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "src"))
 
-from omini_rtksync.web import DashboardHandler  # noqa: E402
+from omni_rtksync.web import DashboardHandler  # noqa: E402
 
-HANDLER = RAIZ / "src" / "omini_rtksync" / "web.py"
+HANDLER = RAIZ / "src" / "omni_rtksync" / "web.py"
 
 PROIBIDO = ("python", "basehttp", "simplehttp", "wsgi")
 

@@ -15,8 +15,8 @@ import os
 import tempfile
 import unittest
 
-from omini_rtksync.cli import OmniSyncEngine
-from omini_rtksync.config import Settings
+from omni_rtksync.cli import OmniSyncEngine
+from omni_rtksync.config import Settings
 
 
 class TestBancoAusenteNaoEFalha(unittest.TestCase):

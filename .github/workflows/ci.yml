@@ -36,8 +36,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install .
-          OminiRTKSync --help
-          ominirtksync --help
+          OmniRTKSync --help
+          omnirtksync --help
 
   docker-validation:
     name: Validate Docker Image Build & Testcontainers
@@ -63,10 +63,10 @@ jobs:
 
       - name: Build Docker image (validate no build error)
         run: |
-          docker build -t ominirtksync:test .
+          docker build -t omnirtksync:test .
 
       - name: Validate container with Testcontainers
         env:
-          TEST_DOCKER_IMAGE: ominirtksync:test
+          TEST_DOCKER_IMAGE: omnirtksync:test
         run: |
           PYTHONPATH=src python3 -m unittest tests/test_container.py -v

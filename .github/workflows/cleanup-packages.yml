@@ -5,7 +5,7 @@ name: Package Retention
 # Historico: a primeira versao deste arquivo nao era limpeza. Com
 # min-versions-to-keep: 0 e delete-only-untagged-versions: false ela apagava
 # TODAS as versoes e em seguida removia o proprio package via API. Quem
-# estivesse puxando ghcr.io/pathbit/ominirtksync ficava sem imagem.
+# estivesse puxando ghcr.io/pathbit/omnirtksync ficava sem imagem.
 #
 # A segunda versao corrigia isso, mas usava actions/delete-package-versions,
 # que trata cada manifesto como uma versao independente. O build e multi-arch
@@ -40,7 +40,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: package-retention-ominirtksync
+  group: package-retention-omnirtksync
   cancel-in-progress: false
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: ${{ github.repository_owner }}
-          packages: ominirtksync
+          packages: omnirtksync
           # Guarda 2 imagens marcadas anteriores mais a 'latest' (totalizando exatamente 3 versoes ativas).
           keep-n-tagged: ${{ github.event.inputs.keep || '2' }}
           exclude-tags: latest
@@ -79,7 +79,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "### Versoes mantidas em ominirtksync" >> "$GITHUB_STEP_SUMMARY"
-          gh api "/orgs/${{ github.repository_owner }}/packages/container/ominirtksync/versions" \
+          echo "### Versoes mantidas em omnirtksync" >> "$GITHUB_STEP_SUMMARY"
+          gh api "/orgs/${{ github.repository_owner }}/packages/container/omnirtksync/versions" \
             --jq '.[] | "- \(.name[0:19])  tags: \(.metadata.container.tags | join(", "))"' \
             >> "$GITHUB_STEP_SUMMARY" || echo "- (nao foi possivel listar)" >> "$GITHUB_STEP_SUMMARY"

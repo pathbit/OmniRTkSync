@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 
-from omini_rtksync.gateway import (
+from omni_rtksync.gateway import (
     detect_connection_table,
     get_all_connections,
     get_db_connection,
@@ -16,7 +16,7 @@ from omini_rtksync.gateway import (
 )
 
 
-class TestOminiDatabase(unittest.TestCase):
+class TestOmniDatabase(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.db_path = os.path.join(self.temp_dir.name, "storage.sqlite")

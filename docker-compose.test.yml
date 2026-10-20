@@ -9,15 +9,15 @@
 #
 # Nao depende de nenhuma stack de artigo: e uma stack do proprio repositorio.
 
-name: ominirtksync-test
+name: omnirtksync-test
 
 services:
-  ominirtk-test-router:
+  omnirtk-test-router:
     image: diegosouzapw/omniroute:latest
-    container_name: ominirtk-test-router
-    hostname: ominirtk-test-router
+    container_name: omnirtk-test-router
+    hostname: omnirtk-test-router
     networks:
-      - ominirtksync-test-net
+      - omnirtksync-test-net
     restart: unless-stopped
     ports:
       - "127.0.0.1:19129:20128"
@@ -46,13 +46,13 @@ services:
       # O primeiro boot roda migracoes e cria o banco.
       start_period: 45s
 
-  ominirtk-test-sync:
+  omnirtk-test-sync:
     build: .
-    image: ghcr.io/pathbit/ominirtksync:local
-    container_name: ominirtk-test-sync
-    hostname: ominirtk-test-sync
+    image: ghcr.io/pathbit/omnirtksync:local
+    container_name: omnirtk-test-sync
+    hostname: omnirtk-test-sync
     networks:
-      - ominirtksync-test-net
+      - omnirtksync-test-net
     restart: unless-stopped
     ports:
       # Porta interna 9090 nos tres sincronizadores; publicada em 19092 aqui.
@@ -60,7 +60,7 @@ services:
     environment:
       - DATA_DIR=/app/data
       - DB_PATH=/app/data/storage.sqlite
-      - OMNIROUTE_URL=http://ominirtk-test-router:20128
+      - OMNIROUTE_URL=http://omnirtk-test-router:20128
       - WEB_PORT=9090
       - SYNC_INTERVAL=60
       - REFRESH_MARGIN=900
@@ -72,7 +72,7 @@ services:
     volumes:
       - gateway_data:/app/data
     depends_on:
-      ominirtk-test-router:
+      omnirtk-test-router:
         condition: service_healthy
     healthcheck:
       test:
@@ -91,8 +91,8 @@ volumes:
   gateway_data:
 
 networks:
-  ominirtksync-test-net:
-    name: ominirtksync-test-net
+  omnirtksync-test-net:
+    name: omnirtksync-test-net
     # Rede propria tambem na stack de teste. Sem esta secao o compose sobe em
-    # `ominirtksync-test_default`, a rede implicita onde duas stacks do mesmo
+    # `omnirtksync-test_default`, a rede implicita onde duas stacks do mesmo
     # daemon resolvem o mesmo nome curto.

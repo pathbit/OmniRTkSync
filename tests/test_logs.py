@@ -6,7 +6,7 @@ import time
 import unittest
 import unittest.mock
 
-from omini_rtksync import logs
+from omni_rtksync import logs
 
 
 class TestLogRetention(unittest.TestCase):

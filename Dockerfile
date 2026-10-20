@@ -1,14 +1,14 @@
 # ==============================================================================
-# OminiRTKSync: OmniRoute Universal Token & Connection Sync
+# OmniRTKSync: OmniRoute Universal Token & Connection Sync
 # Imagem oficial baseada em Python 3.14 Alpine
 # ==============================================================================
 
 FROM python:3.14-alpine
 
-LABEL org.opencontainers.image.title="OminiRTKSync"
-LABEL org.opencontainers.image.description="OminiRoute Universal Token & Connection Synchronizer"
+LABEL org.opencontainers.image.title="OmniRTKSync"
+LABEL org.opencontainers.image.description="OmniRoute Universal Token & Connection Synchronizer"
 LABEL org.opencontainers.image.authors="Eliel Sousa <eliel@pathbit.co>"
-LABEL org.opencontainers.image.source="https://github.com/pathbit/OminiRTkSync"
+LABEL org.opencontainers.image.source="https://github.com/pathbit/OmniRTkSync"
 
 WORKDIR /app
 
@@ -44,5 +44,5 @@ EXPOSE 9090
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
   CMD /opt/venv/bin/python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9090/healthz', timeout=3)" || exit 1
 
-ENTRYPOINT ["/opt/venv/bin/python3", "-m", "omini_rtksync.cli"]
+ENTRYPOINT ["/opt/venv/bin/python3", "-m", "omni_rtksync.cli"]
 CMD ["--daemon"]
